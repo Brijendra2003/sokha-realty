@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// Firebase Storage is no longer used for media uploads.
+// All images and files are handled by Cloudinary via /api/upload.
+// This file is kept as a placeholder in case Storage is needed in future.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

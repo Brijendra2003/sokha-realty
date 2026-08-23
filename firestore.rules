@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper Functions ──────────────────────────────────────────
+    function isAdmin() {
+      return request.auth != null;
+      // For stricter control, check a custom claim:
+      // return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // ── Projects: public read, admin write ──────────────────────────
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Blogs: public read, admin write ──────────────────────────────
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Leads: public create only, admin read/write ──────────────────
+    match /leads/{leadId} {
+      allow create: if true;   // Anyone can submit an enquiry
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── Career Applications: public create only, admin read/write ────
+    match /career_applications/{appId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── Job Postings: public read, admin write ────────────────────────
+    match /job_postings/{jobId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
