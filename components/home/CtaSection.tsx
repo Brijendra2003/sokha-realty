@@ -3,15 +3,15 @@ import { ArrowRight, Phone } from "lucide-react";
 
 export function CtaSection() {
   return (
-    <section className="relative py-28 md:py-36 bg-charcoal-900 overflow-hidden min-h-[460px]">
-      {/* Fine grain texture for depth */}
+    <section className="relative py-28 md:py-36 overflow-hidden min-h-[460px]">
+      {/* Background image */}
       <div
-        className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/BG_ING_1.jpeg')" }}
       />
+
+      {/* Black overlay for text visibility */}
+      <div className="absolute inset-0 bg-black/70" />
 
       {/* Layered gradient glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

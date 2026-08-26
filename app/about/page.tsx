@@ -69,20 +69,24 @@ export default function AboutPage() {
       <Navbar />
       <main className="pt-20">
         {/* Hero */}
-        <section className="relative py-20 md:py-28 bg-charcoal-900 overflow-hidden">
-          <div className="absolute inset-0 bg-hero-pattern" />
+        <section className="relative py-20 md:py-28 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/images/Cta_Bg_Img.jpeg')" }}
+          />
+          <div className="absolute inset-0 bg-black/70" />
           <div className="container-max relative z-10 text-center">
-            <span className="section-label !text-gold-400">Our Story</span>
-            <h1 className="heading-xl text-white max-w-2xl mx-auto text-balance">
-              Three Decades of{" "}
-              <em className="text-gradient-gold not-italic">Building Trust</em>
-            </h1>
-            <p className="font-body text-charcoal-300 max-w-xl mx-auto mt-6">
-              From a single project in 1995 to a name synonymous with quality
-              across Mumbai — this is the Sokha Realty journey.
-            </p>
-          </div>
-        </section>
+                        <span className="section-label !text-gold-400">Our Story</span>
+                                    <h1 className="heading-xl text-white max-w-2xl mx-auto text-balance">
+                                                  Three Decades of{" "}
+                                                                <em className="text-gradient-gold not-italic">Building Trust</em>
+                                                                            </h1>
+                                                                                        <p className="font-body text-charcoal-300 max-w-xl mx-auto mt-6">
+                                                                                                      From a single project in 1995 to a name synonymous with quality
+                                                                                                                    across Mumbai — this is the Sokha Realty journey.
+                                                                                                                                </p>
+                                                                                                                                          </div>
+                                                                                                                                                  </section>
 
         {/* Founder's Note */}
         <section className="section-py bg-white dark:bg-charcoal-800">

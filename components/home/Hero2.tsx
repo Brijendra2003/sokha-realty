@@ -18,17 +18,18 @@ export default function Hero2() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedRef = useRef<boolean[]>(new Array(FRAME_COUNT).fill(false));
   const currentFrameRef = useRef(0);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [firstFrameReady, setFirstFrameReady] = useState(false);
   const { showLoader, hideLoader } = usePageLoader();
 
-  // Preload all frames — while this runs, block the whole page with the
-  // full-screen overlay (see GlobalLoadingOverlay / PageLoaderContext).
+  // Preload frame 0 with priority and unblock the page as soon as it's
+  // ready — the rest of the 192-frame sequence (tens of MB) streams in the
+  // background afterwards instead of holding up the whole page.
   useEffect(() => {
     let isCancelled = false;
-    let loadedCount = 0;
     let hasReleasedLock = false;
-    const images: HTMLImageElement[] = [];
+    const images: HTMLImageElement[] = new Array(FRAME_COUNT);
 
     const releaseLock = () => {
       if (!hasReleasedLock) {
@@ -37,35 +38,37 @@ export default function Hero2() {
       }
     };
 
+    const loadFrame = (index: number, onDone?: () => void) => {
+      const img = new Image();
+      img.src = getFrameSrc(index + 1);
+      const finish = () => {
+        loadedRef.current[index] = true;
+        onDone?.();
+      };
+      img.onload = finish;
+      img.onerror = finish;
+      images[index] = img;
+    };
+
     showLoader();
 
-    for (let i = 1; i <= FRAME_COUNT; i++) {
-      const img = new Image();
-      img.src = getFrameSrc(i);
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === FRAME_COUNT && !isCancelled) {
-          setImagesLoaded(true);
-          releaseLock();
-        }
-      };
-      img.onerror = () => {
-        loadedCount++;
-        if (loadedCount === FRAME_COUNT && !isCancelled) {
-          setImagesLoaded(true);
-          releaseLock();
-        }
-      };
-      images.push(img);
-    }
+    loadFrame(0, () => {
+      if (isCancelled) return;
+      setFirstFrameReady(true);
+      releaseLock();
+
+      for (let i = 1; i < FRAME_COUNT; i++) {
+        loadFrame(i);
+      }
+    });
 
     imagesRef.current = images;
 
     return () => {
       isCancelled = true;
       // Safety net: if the component unmounts (e.g. fast navigation away)
-      // before frames finish loading, release the lock so the overlay
-      // never gets stuck blocking other pages.
+      // before the first frame finishes loading, release the lock so the
+      // overlay never gets stuck blocking other pages.
       releaseLock();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +76,7 @@ export default function Hero2() {
 
   // Draw + scroll wiring, once images are ready
   useEffect(() => {
-    if (!imagesLoaded) return;
+    if (!firstFrameReady) return;
 
     const canvas = canvasRef.current;
     const wrapper = wrapperRef.current;
@@ -93,7 +96,27 @@ export default function Hero2() {
     };
 
     const drawFrame = (index: number) => {
-      const img = imagesRef.current[index];
+      // The target frame may not have streamed in yet — fall back to the
+      // nearest already-loaded frame so scrubbing stays smooth while the
+      // rest of the sequence downloads in the background.
+      let targetIndex = index;
+      if (!loadedRef.current[targetIndex]) {
+        let found = -1;
+        for (let d = 1; d < FRAME_COUNT; d++) {
+          if (index - d >= 0 && loadedRef.current[index - d]) {
+            found = index - d;
+            break;
+          }
+          if (index + d < FRAME_COUNT && loadedRef.current[index + d]) {
+            found = index + d;
+            break;
+          }
+        }
+        if (found === -1) return;
+        targetIndex = found;
+      }
+
+      const img = imagesRef.current[targetIndex];
       if (!img || !img.complete || img.naturalWidth === 0) return;
 
       const canvasWidth = canvas.width;
@@ -165,7 +188,7 @@ export default function Hero2() {
       window.removeEventListener("resize", resizeCanvas);
       ctx.revert();
     };
-  }, [imagesLoaded]);
+  }, [firstFrameReady]);
 
   return (
     <div ref={wrapperRef} className="relative h-[500vh]">
