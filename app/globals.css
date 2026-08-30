@@ -3,17 +3,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Google Fonts fallback (loaded via next/font) ───────────────── */
+/* ════════════════════════════════════════════════════════════════════
+   Sokha Realty — "Midnight Navy & Champagne"
+   Fonts: Fraunces (display) · Plus Jakarta Sans (body) · JetBrains Mono
+   ════════════════════════════════════════════════════════════════════ */
 
-/* ── CSS Custom Properties ──────────────────────────────────────── */
+/* ── Design tokens ──────────────────────────────────────────────── */
 :root {
-  --gold: #c9a84c;
-  --gold-light: #e4b530;
-  --gold-dark: #8b6914;
-  --container: 1200px;
+  /* Champagne accent */
+  --champagne-300: #e0c089;
+  --champagne-400: #d2aa6b;
+  --champagne: #b98b4e;
+  --champagne-600: #9c7139;
+  --champagne-700: #7e5a2d;
+
+  /* Navy ink */
+  --navy-700: #16283c;
+  --navy-800: #0f1e2e;
+  --navy: #0a1622;
+
+  /* Warm paper */
+  --sand-100: #fbf9f6;
+  --sand-300: #e6e0d8;
+
+  /* Legacy aliases kept for any inline var() usage */
+  --gold: var(--champagne);
+  --gold-light: var(--champagne-400);
+  --gold-dark: var(--champagne-700);
+
+  --container: 1240px;
+
+  /* Surfaces resolved per theme */
+  --surface: #ffffff;
+  --surface-sunk: #fbf9f6;
+  --hairline: #e6e0d8;
 }
 
-/* ── Base Reset ──────────────────────────────────────────────────── */
+.dark {
+  --surface: #16283c;
+  --surface-sunk: #0a1622;
+  --hairline: #24374f;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
 @layer base {
   *,
   *::before,
@@ -23,36 +55,48 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background-color: rgba(201, 168, 76, 0.25);
+    background-color: rgba(185, 139, 78, 0.28);
     color: inherit;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar — slim navy track, champagne thumb */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 10px;
+    height: 10px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 3px;
+    background: var(--champagne);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--gold-dark);
+    background: var(--champagne-600);
+    background-clip: content-box;
   }
 
-  /* Typography base */
+  /* Typography base — Fraunces reads best slightly tightened */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply font-display font-semibold tracking-tight;
+    @apply font-display font-semibold;
+    letter-spacing: -0.018em;
+    font-variation-settings: "SOFT" 0, "WONK" 0;
   }
 
   p {
@@ -70,87 +114,165 @@
   button {
     @apply cursor-pointer;
   }
+
+  /* Numerals line up in tables, prices and RERA numbers */
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Consistent, visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid var(--champagne);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
-/* ── Component Layer ─────────────────────────────────────────────── */
+/* ── Components ─────────────────────────────────────────────────── */
 @layer components {
   /* ── Container ── */
   .container-max {
-    @apply max-w-container mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-container mx-auto px-5 sm:px-6 lg:px-8;
   }
 
-  /* ── Gold Divider ── */
+  /* ── Champagne divider ── */
   .gold-divider {
     @apply relative flex items-center gap-4;
   }
   .gold-divider::before,
   .gold-divider::after {
     content: "";
-    @apply flex-1 h-px bg-gold-500/30;
+    @apply flex-1 h-px bg-champagne-500/30;
   }
 
-  /* ── Buttons ── */
+  /* ── Buttons ─────────────────────────────────────────────────────
+     Primary  — champagne fill, navy ink (8.4:1)
+     Secondary— hairline outline, fills on hover
+     Ghost    — text only
+     Navy     — solid navy, for use on light/champagne surfaces
+     ─────────────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2
-           bg-gold-gradient text-charcoal-900 font-body font-semibold
-           px-7 py-3.5 rounded-sm
+    @apply relative inline-flex items-center justify-center gap-2
+           bg-gold-gradient text-navy-900 font-body font-semibold text-sm
+           px-7 py-3.5 rounded-sm overflow-hidden
            shadow-gold hover:shadow-gold-lg
            transition-all duration-300 hover:-translate-y-0.5
-           focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2
-           dark:focus:ring-offset-charcoal-900;
+           active:translate-y-0
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-champagne-500
+           focus-visible:ring-offset-2 dark:focus-visible:ring-offset-navy-900;
+  }
+  /* Sheen sweep on hover */
+  .btn-primary::after {
+    content: "";
+    @apply absolute inset-0 bg-champagne-sheen opacity-0 transition-opacity duration-500;
+    transform: translateX(-100%);
+  }
+  .btn-primary:hover::after {
+    @apply opacity-100;
+    transform: translateX(100%);
+    transition:
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.2s;
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2
-           bg-transparent border border-gold-500 text-gold-500
-           font-body font-semibold
+           bg-transparent border border-champagne-500 text-champagne-700
+           dark:text-champagne-400
+           font-body font-semibold text-sm
            px-7 py-3.5 rounded-sm
-           hover:bg-gold-500 hover:text-charcoal-900
+           hover:bg-champagne-500 hover:text-navy-900 hover:border-champagne-500
+           dark:hover:text-navy-900
            transition-all duration-300
-           focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2
-           dark:focus:ring-offset-charcoal-900;
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-champagne-500
+           focus-visible:ring-offset-2 dark:focus-visible:ring-offset-navy-900;
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2
-           text-charcoal-600 dark:text-ivory-300
-           hover:text-gold-500 dark:hover:text-gold-400
-           font-body font-medium
+           text-navy-600 dark:text-sand-300
+           hover:text-champagne-700 dark:hover:text-champagne-400
+           font-body font-medium text-sm
            px-4 py-2 rounded-sm
            transition-colors duration-200;
   }
 
+  .btn-navy {
+    @apply inline-flex items-center justify-center gap-2
+           bg-navy-800 text-sand-100 font-body font-semibold text-sm
+           px-7 py-3.5 rounded-sm
+           hover:bg-navy-700 shadow-card hover:shadow-card-hover
+           transition-all duration-300 hover:-translate-y-0.5
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-champagne-500
+           focus-visible:ring-offset-2;
+  }
+
   /* ── Cards ── */
   .card {
-    @apply bg-white dark:bg-charcoal-700
-           rounded-lg border border-ivory-300 dark:border-charcoal-600
+    @apply bg-white dark:bg-navy-700
+           rounded-lg border border-sand-300 dark:border-navy-600
            shadow-card hover:shadow-card-hover
            dark:shadow-dark-card dark:hover:shadow-dark-card-hover
-           transition-all duration-300;
+           transition-all duration-400 ease-expo-out;
   }
 
-  /* ── Section padding ── */
+  /* Card that lifts and warms its border on hover */
+  .card-lift {
+    @apply card hover:-translate-y-1 hover:border-champagne-300 dark:hover:border-champagne-700;
+  }
+
+  /* ── Section rhythm ── */
   .section-py {
-    @apply py-16 md:py-24;
+    @apply py-20 md:py-28;
   }
 
-  /* ── Gold accent line ── */
+  .section-py-sm {
+    @apply py-14 md:py-20;
+  }
+
+  /* ── Champagne accent rule ── */
   .gold-accent-line {
-    @apply block w-12 h-0.5 bg-gold-gradient mb-4;
+    @apply block w-14 h-px bg-gold-gradient mb-5;
   }
 
-  /* ── Section label ── */
+  /* ── Eyebrow / section label ──
+     Uses champagne-700 on light for a 6.2:1 contrast at 11px. */
   .section-label {
-    @apply font-mono text-xs font-medium tracking-[0.2em] uppercase text-gold-500 mb-3;
+    @apply font-mono text-2xs font-medium tracking-label uppercase
+           text-champagne-700 dark:text-champagne-400 mb-3;
   }
 
-  /* ── Heading styles ── */
+  /* Eyebrow with a leading rule */
+  .eyebrow {
+    @apply inline-flex items-center gap-3 font-mono text-2xs font-medium
+           tracking-label uppercase text-champagne-700 dark:text-champagne-400;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply w-8 h-px bg-champagne-500;
+  }
+
+  /* ── Headings ── */
   .heading-xl {
-    @apply font-display text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight;
+    @apply font-display text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.08];
   }
 
   .heading-lg {
-    @apply font-display text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight;
+    @apply font-display text-3xl sm:text-4xl md:text-5xl font-semibold leading-[1.12];
   }
 
   .heading-md {
@@ -161,42 +283,51 @@
     @apply font-display text-xl sm:text-2xl font-semibold;
   }
 
-  /* ── Form inputs ── */
+  /* Lead paragraph under a heading */
+  .lead {
+    @apply text-base sm:text-lg text-navy-500 dark:text-sand-400 leading-relaxed;
+  }
+
+  /* ── Forms ── */
   .form-input {
     @apply w-full px-4 py-3 rounded-sm text-sm font-body
-           bg-white dark:bg-charcoal-800
-           border border-ivory-300 dark:border-charcoal-600
-           text-charcoal-800 dark:text-ivory-100
-           placeholder-charcoal-400 dark:placeholder-charcoal-400
-           focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent
+           bg-white dark:bg-navy-800
+           border border-sand-300 dark:border-navy-600
+           text-navy-800 dark:text-sand-100
+           placeholder-navy-400 dark:placeholder-navy-400
+           focus:outline-none focus:ring-2 focus:ring-champagne-500/60
+           focus:border-champagne-500
            transition duration-200;
   }
 
   .form-label {
-    @apply block text-xs font-semibold font-body tracking-wide uppercase
-           text-charcoal-500 dark:text-charcoal-300 mb-1.5;
+    @apply block text-2xs font-semibold font-mono tracking-label uppercase
+           text-navy-500 dark:text-sand-400 mb-2;
   }
 
   .form-error {
-    @apply text-red-500 text-xs mt-1 font-body;
+    @apply text-red-600 dark:text-red-400 text-xs mt-1.5 font-body;
   }
 
-  /* ── Badge ── */
+  /* ── Badges ── */
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full
            text-2xs font-mono font-medium tracking-wider uppercase;
   }
 
   .badge-gold {
-    @apply badge bg-gold-100 text-gold-700 dark:bg-gold-900/30 dark:text-gold-400;
+    @apply badge bg-champagne-100 text-champagne-800
+           dark:bg-champagne-500/15 dark:text-champagne-300;
   }
 
   .badge-green {
-    @apply badge bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400;
+    @apply badge bg-emerald-50 text-emerald-800
+           dark:bg-emerald-500/15 dark:text-emerald-300;
   }
 
   .badge-blue {
-    @apply badge bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400;
+    @apply badge bg-navy-100 text-navy-700
+           dark:bg-navy-500/25 dark:text-navy-200;
   }
 
   /* ── Sticky sidebar layout ── */
@@ -204,15 +335,17 @@
     @apply grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 lg:gap-12;
   }
 
-  /* ── Rich text content from CMS ── */
+  /* ── CMS rich text ── */
   .prose-custom {
-    @apply text-charcoal-700 dark:text-ivory-200 font-body leading-relaxed;
+    @apply text-navy-600 dark:text-sand-300 font-body leading-relaxed;
   }
   .prose-custom h2 {
-    @apply font-display text-2xl sm:text-3xl font-semibold mt-10 mb-4;
+    @apply font-display text-2xl sm:text-3xl font-semibold mt-12 mb-4
+           text-navy-800 dark:text-sand-100;
   }
   .prose-custom h3 {
-    @apply font-display text-xl sm:text-2xl font-semibold mt-8 mb-3;
+    @apply font-display text-xl sm:text-2xl font-semibold mt-9 mb-3
+           text-navy-800 dark:text-sand-100;
   }
   .prose-custom p {
     @apply mb-5;
@@ -221,38 +354,150 @@
   .prose-custom ol {
     @apply mb-5 pl-5;
   }
+  .prose-custom ul {
+    @apply list-disc marker:text-champagne-500;
+  }
+  .prose-custom ol {
+    @apply list-decimal marker:text-champagne-600 marker:font-mono;
+  }
   .prose-custom li {
-    @apply mb-2;
+    @apply mb-2 pl-1;
   }
   .prose-custom a {
-    @apply text-gold-500 hover:text-gold-600 underline;
+    @apply text-champagne-700 dark:text-champagne-400
+           underline underline-offset-4 decoration-champagne-500/40
+           hover:decoration-champagne-500;
+  }
+  .prose-custom strong {
+    @apply font-semibold text-navy-800 dark:text-sand-100;
   }
   .prose-custom img {
-    @apply rounded-lg my-6 w-full;
+    @apply rounded-lg my-8 w-full;
   }
   .prose-custom blockquote {
-    @apply border-l-4 border-gold-400 pl-4 italic text-charcoal-500 dark:text-charcoal-300 my-6;
+    @apply border-l-2 border-champagne-500 pl-5 my-8
+           font-display text-lg italic text-navy-600 dark:text-sand-300;
+  }
+
+  /* ── Legal / policy documents ─────────────────────────────────────
+     Tuned for long-form reading: narrower measure, clear hierarchy,
+     numbered headings that pair with the sticky contents rail.
+     ─────────────────────────────────────────────────────────────── */
+  .legal-prose {
+    @apply font-body text-[15px] leading-[1.8] text-navy-600 dark:text-sand-300;
+  }
+  .legal-prose > * + * {
+    @apply mt-4;
+  }
+  .legal-prose h3 {
+    @apply font-display text-lg font-semibold mt-8 mb-1
+           text-navy-800 dark:text-sand-100;
+  }
+  .legal-prose p {
+    @apply mb-0;
+  }
+  .legal-prose ul {
+    @apply list-disc pl-5 space-y-2 marker:text-champagne-500;
+  }
+  .legal-prose ol {
+    @apply list-decimal pl-5 space-y-2 marker:text-champagne-600 marker:font-mono;
+  }
+  .legal-prose li {
+    @apply pl-1;
+  }
+  .legal-prose a {
+    @apply text-champagne-700 dark:text-champagne-400
+           underline underline-offset-4 decoration-champagne-500/40
+           hover:decoration-champagne-500 break-words;
+  }
+  .legal-prose strong {
+    @apply font-semibold text-navy-800 dark:text-sand-100;
+  }
+  .legal-prose table {
+    @apply w-full text-sm border-collapse my-6;
+  }
+  .legal-prose th {
+    @apply text-left font-mono text-2xs uppercase tracking-label
+           text-champagne-700 dark:text-champagne-400
+           border-b border-sand-300 dark:border-navy-600 pb-3 px-3 align-bottom;
+  }
+  .legal-prose td {
+    @apply border-b border-sand-300/70 dark:border-navy-600/70 py-3 px-3 align-top;
+  }
+
+  /* Callout box for "important" legal notes */
+  .legal-callout {
+    @apply relative rounded-sm border border-champagne-300 dark:border-champagne-700
+           bg-champagne-50 dark:bg-champagne-500/10
+           p-5 text-sm leading-relaxed
+           text-navy-700 dark:text-sand-300;
   }
 
   /* ── Accordion ── */
   .accordion-trigger {
     @apply w-full flex items-center justify-between py-4 font-body font-medium text-left
-           text-charcoal-700 dark:text-ivory-100 hover:text-gold-500 dark:hover:text-gold-400
-           transition-colors duration-200 border-b border-ivory-300 dark:border-charcoal-600;
+           text-navy-700 dark:text-sand-100
+           hover:text-champagne-700 dark:hover:text-champagne-400
+           transition-colors duration-200
+           border-b border-sand-300 dark:border-navy-600;
+  }
+
+  /* ── Link with an animated champagne underline ── */
+  .link-underline {
+    @apply relative inline-block;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute left-0 -bottom-0.5 h-px w-full bg-champagne-500
+           origin-right scale-x-0 transition-transform duration-400 ease-expo-out;
+  }
+  .link-underline:hover::after {
+    @apply origin-left scale-x-100;
   }
 }
 
-/* ── Utility Layer ───────────────────────────────────────────────── */
+/* ── Utilities ──────────────────────────────────────────────────── */
 @layer utilities {
+  /* Accent TEXT needs more weight than the accent FILL.
+     champagne-500 (#B98B4E) is the brand value and stays as-is for
+     bg-*, border-* and ring-* — but at 3.1:1 on paper it is too light
+     for 12–14px copy (prices, captions, inline links). Text usages are
+     stepped down to a deeper brass (5.3:1 on paper) here, in one place,
+     rather than editing every call site. Dark mode steps the other way.
+     Hover/group-hover variants keep the brighter 500 by specificity,
+     which is what you want for an accent that lights up on interaction. */
+  .text-champagne-500,
+  .text-gold-500 {
+    color: #8a6432;
+  }
+  .dark .text-champagne-500,
+  .dark .text-gold-500 {
+    color: #d2aa6b;
+  }
+
   .text-gradient-gold {
-    background: linear-gradient(135deg, #c9a84c 0%, #e4b530 50%, #a8841c 100%);
+    background: linear-gradient(
+      135deg,
+      #e0c089 0%,
+      #b98b4e 50%,
+      #9c7139 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  /* Fine paper grain — sits over navy sections */
   .bg-noise {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+
+  /* Hairline grid, for hero and legal headers */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(185, 139, 78, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(185, 139, 78, 0.07) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
 
   .no-scrollbar {
@@ -265,5 +510,14 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Scroll target offset so sticky navbar never covers a heading */
+  .scroll-anchor {
+    scroll-margin-top: 7rem;
   }
 }

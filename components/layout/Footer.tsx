@@ -146,11 +146,19 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-charcoal-700">
         <div className="container-max py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-charcoal-500 text-center">
+          <p className="text-xs text-navy-300 text-center">
             © {new Date().getFullYear()} Sokha Realty Pvt. Ltd. All rights reserved.
           </p>
-          <p className="text-xs text-charcoal-600 text-center">
-            * All images are for representational purposes only. RERA registration required.
+          <p className="text-xs text-navy-400 text-center">
+            * All images are artistic impressions. See our{' '}
+            <Link href="/disclaimer" className="underline underline-offset-2 hover:text-champagne-400 transition-colors">
+              Disclaimer
+            </Link>{' '}
+            and{' '}
+            <Link href="/rera" className="underline underline-offset-2 hover:text-champagne-400 transition-colors">
+              RERA Disclosures
+            </Link>
+            .
           </p>
         </div>
       </div>

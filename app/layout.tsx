@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, DM_Mono } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { PageLoaderProvider } from "@/contexts/PageLoaderContext";
 import { GlobalLoadingOverlay } from "@/components/common/GlobalLoadingOverlay";
@@ -9,25 +9,28 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
 // ─── Fonts ────────────────────────────────────────────────────────
-const cormorant = Cormorant_Garamond({
+// Display: Fraunces — warm optical serif for headlines and the wordmark.
+const displaySerif = Fraunces({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
+  variable: "--font-display",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+// Body: Plus Jakarta Sans — crisp geometric sans for all running text.
+const bodySans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-dm-sans",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-sans",
   display: "swap",
 });
 
-const dmMono = DM_Mono({
+// Labels: JetBrains Mono — eyebrows, RERA numbers, tabular data.
+const labelMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-dm-mono",
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -42,7 +45,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable}`}
+      className={`${displaySerif.variable} ${bodySans.variable} ${labelMono.variable}`}
     >
       <head>
         <link rel="icon" href="/favicon.ico" />
@@ -54,7 +57,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-body bg-ivory-100 dark:bg-charcoal-900 text-charcoal-700 dark:text-ivory-100 antialiased transition-colors duration-300">
+      <body className="font-body bg-sand-100 dark:bg-navy-900 text-navy-700 dark:text-sand-200 antialiased transition-colors duration-300">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
