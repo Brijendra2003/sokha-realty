@@ -2,12 +2,19 @@ import type { Config } from 'tailwindcss';
 
 /* ────────────────────────────────────────────────────────────────────
    Sokha Realty — Design System
-   Theme: "Midnight Navy & Champagne"
+   Theme: "Warm Organic Luxury"
 
-   Three ramps drive the whole site:
-     navy      → structural dark neutral (surfaces, ink, footer, hero)
-     champagne → warm brass accent (rules, labels, CTAs, highlights)
-     sand      → warm light neutral (page paper, borders, dark-mode text)
+   The site is built from soft, hand-drawn shapes on warm paper: organic
+   blobs behind icons, arched photography, curved bands between sections
+   and pill CTAs. Structure stays luxurious (deep navy, brass) but the
+   geometry is round and welcoming rather than sharp and corporate.
+
+   Five ramps drive everything:
+     navy      → structural dark neutral (deep bands, ink, footer)
+     champagne → warm brass accent (rules, labels, primary CTAs)
+     sand      → warm light neutral (page paper, hairlines)
+     clay      → terracotta support accent (blobs, highlights, tiles)
+     sage      → muted green support accent (blobs, tiles, badges)
 
    Legacy aliases (gold / charcoal / ivory) point at the same values so
    every existing component re-skins automatically. Prefer the semantic
@@ -42,11 +49,41 @@ const champagne = {
 
 const sand = {
   50:  '#FFFDFB',
-  100: '#FBF9F6', // page paper
-  200: '#F4F0E9',
-  300: '#E6E0D8', // hairline borders
-  400: '#D3CABD',
-  500: '#B8AC9B',
+  100: '#FBF7F1', // page paper — a touch warmer than before
+  200: '#F5EFE6',
+  300: '#E8E0D4', // hairline borders
+  400: '#D3C8B8',
+  500: '#B8AB98',
+};
+
+/* Terracotta — the warm "coral" note the references lean on for
+   secondary blobs, highlight tiles and playful accents. */
+const clay = {
+  50:  '#FDF3EF',
+  100: '#FAE3DA',
+  200: '#F3C6B5',
+  300: '#E9A388',
+  400: '#DD8362',
+  500: '#C96A47', // signature terracotta
+  600: '#A95236',
+  700: '#87402A',
+  800: '#653020',
+  900: '#452016',
+};
+
+/* Sage — the calm green note; used for "verified / green building /
+   sustainability" cues and to cool down blob clusters. */
+const sage = {
+  50:  '#F2F6F2',
+  100: '#E2EBE2',
+  200: '#C4D6C6',
+  300: '#9FBCA3',
+  400: '#7BA081',
+  500: '#5C8464', // signature sage
+  600: '#476950',
+  700: '#37523E',
+  800: '#283C2E',
+  900: '#1A281F',
 };
 
 const config: Config = {
@@ -63,6 +100,8 @@ const config: Config = {
         navy,
         champagne,
         sand,
+        clay,
+        sage,
 
         // ── Legacy aliases (kept so existing markup re-skins) ──
         charcoal: navy,
@@ -115,15 +154,25 @@ const config: Config = {
       borderRadius: {
         '4xl': '2rem',
         '5xl': '2.5rem',
+        // Organic, hand-drawn silhouettes — the signature shape language.
+        blob:      '58% 42% 47% 53% / 47% 52% 48% 53%',
+        'blob-2':  '42% 58% 62% 38% / 55% 42% 58% 45%',
+        'blob-3':  '65% 35% 38% 62% / 42% 58% 42% 58%',
+        // Arch — flat base, domed top. Used for portrait photography.
+        arch:      '9999px 9999px 2rem 2rem',
+        'arch-lg': '9999px 9999px 2.5rem 2.5rem',
       },
       boxShadow: {
         // Champagne glow — reserved for primary CTAs
         'gold-sm':        '0 1px 4px 0 rgba(158, 114, 57, 0.18)',
-        'gold':           '0 6px 20px -6px rgba(158, 114, 57, 0.38)',
-        'gold-lg':        '0 14px 36px -10px rgba(158, 114, 57, 0.48)',
-        // Navy-tinted elevation — everything else
-        'card':           '0 1px 2px 0 rgba(10,22,34,0.04), 0 8px 28px -12px rgba(10,22,34,0.14)',
-        'card-hover':     '0 2px 4px 0 rgba(10,22,34,0.05), 0 20px 48px -16px rgba(10,22,34,0.22)',
+        'gold':           '0 8px 22px -8px rgba(158, 114, 57, 0.42)',
+        'gold-lg':        '0 16px 40px -12px rgba(158, 114, 57, 0.52)',
+        // Warm, diffuse elevation — the default for the soft card language
+        'soft':           '0 1px 2px 0 rgba(69, 45, 22, 0.03), 0 10px 30px -14px rgba(69, 45, 22, 0.16)',
+        'soft-lg':        '0 2px 6px 0 rgba(69, 45, 22, 0.05), 0 26px 56px -20px rgba(69, 45, 22, 0.24)',
+        // Navy-tinted elevation — legacy names, retuned warm
+        'card':           '0 1px 2px 0 rgba(69, 45, 22, 0.03), 0 10px 30px -14px rgba(69, 45, 22, 0.16)',
+        'card-hover':     '0 2px 6px 0 rgba(69, 45, 22, 0.05), 0 26px 56px -20px rgba(69, 45, 22, 0.24)',
         'dark-card':      '0 1px 2px 0 rgba(0,0,0,0.5), 0 10px 32px -14px rgba(0,0,0,0.7)',
         'dark-card-hover':'0 2px 6px 0 rgba(0,0,0,0.6), 0 24px 56px -18px rgba(0,0,0,0.85)',
         'inset-hairline': 'inset 0 0 0 1px rgba(185,139,78,0.18)',
@@ -131,10 +180,12 @@ const config: Config = {
       backgroundImage: {
         'gold-gradient':      'linear-gradient(135deg, #D2AA6B 0%, #B98B4E 55%, #9C7139 100%)',
         'champagne-gradient': 'linear-gradient(135deg, #D2AA6B 0%, #B98B4E 55%, #9C7139 100%)',
+        'clay-gradient':      'linear-gradient(135deg, #E9A388 0%, #C96A47 60%, #A95236 100%)',
         'dark-gradient':      'linear-gradient(160deg, #0A1622 0%, #16283C 55%, #0F1E2E 100%)',
         'navy-gradient':      'linear-gradient(160deg, #0A1622 0%, #16283C 55%, #0F1E2E 100%)',
         'hero-pattern':       'radial-gradient(ellipse 80% 60% at 65% 40%, rgba(185,139,78,0.14) 0%, transparent 65%)',
-        'paper-gradient':     'linear-gradient(180deg, #FFFDFB 0%, #FBF9F6 40%, #F4F0E9 100%)',
+        'paper-gradient':     'linear-gradient(180deg, #FFFDFB 0%, #FBF7F1 45%, #F5EFE6 100%)',
+        'warm-wash':          'radial-gradient(ellipse 70% 55% at 15% 10%, rgba(233,163,136,0.16) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 90% 25%, rgba(210,170,107,0.18) 0%, transparent 62%)',
         'champagne-sheen':    'linear-gradient(100deg, transparent 20%, rgba(224,192,137,0.35) 50%, transparent 80%)',
       },
       animation: {
@@ -143,8 +194,11 @@ const config: Config = {
         'slide-right': 'slideRight 0.6s cubic-bezier(0.16,1,0.3,1) forwards',
         'gold-pulse':  'goldPulse 2.4s ease-in-out infinite',
         'float':       'float 6s ease-in-out infinite',
+        'float-slow':  'float 11s ease-in-out infinite',
         'shimmer':     'shimmer 2.4s linear infinite',
         'rule-in':     'ruleIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards',
+        'blob-morph':  'blobMorph 18s ease-in-out infinite',
+        'sway':        'sway 9s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -174,6 +228,17 @@ const config: Config = {
         ruleIn: {
           '0%':   { transform: 'scaleX(0)' },
           '100%': { transform: 'scaleX(1)' },
+        },
+        // Slowly reshapes an organic blob so decorative shapes feel alive
+        // without ever drawing the eye away from the copy.
+        blobMorph: {
+          '0%, 100%': { borderRadius: '58% 42% 47% 53% / 47% 52% 48% 53%' },
+          '33%':      { borderRadius: '42% 58% 62% 38% / 55% 42% 58% 45%' },
+          '66%':      { borderRadius: '65% 35% 38% 62% / 42% 58% 42% 58%' },
+        },
+        sway: {
+          '0%, 100%': { transform: 'rotate(-4deg)' },
+          '50%':      { transform: 'rotate(4deg)' },
         },
       },
       transitionTimingFunction: {

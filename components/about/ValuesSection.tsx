@@ -2,36 +2,34 @@
 
 import { Target, Eye, Heart, Award } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Blob, DotScatter } from "@/components/ui/Decor";
 import { cn } from "@/lib/utils";
 
 const VALUES = [
   {
     icon: Target,
     title: "Integrity",
-    desc: "Transparent dealings, honest timelines, and ethical business practices in every transaction.",
-    color: "text-blue-400",
-    bg: "bg-blue-400/10 border-blue-400/20",
+    desc: "Transparent dealings, honest timelines and ethical practice in every single transaction.",
+    blob: "blob-champagne",
   },
   {
     icon: Eye,
     title: "Vision",
-    desc: "We don't just build for today — we design spaces that remain relevant for generations.",
-    color: "text-gold-400",
-    bg: "bg-gold-400/10 border-gold-400/20",
+    desc: "We don't build for today — we design spaces that still make sense a generation from now.",
+    blob: "blob-clay",
   },
   {
     icon: Heart,
     title: "Customer-First",
-    desc: "Every decision starts with one question: how does this serve our homeowners?",
-    color: "text-rose-400",
-    bg: "bg-rose-400/10 border-rose-400/20",
+    desc: "Every decision starts with one question: how does this actually serve the people living here?",
+    blob: "blob-sage",
   },
   {
     icon: Award,
     title: "Excellence",
-    desc: "Uncompromising quality standards from foundation to final finish.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10 border-emerald-400/20",
+    desc: "Uncompromising standards from the foundation right through to the final finish.",
+    blob: "blob-champagne",
   },
 ];
 
@@ -39,41 +37,46 @@ export function ValuesSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
-    <section className="section-py bg-white dark:bg-charcoal-800 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[480px] h-[480px] rounded-full bg-gold-500/5 blur-3xl pointer-events-none" />
+    <section className="relative overflow-hidden bg-white py-24 dark:bg-navy-800 md:py-32">
+      <div className="pointer-events-none absolute inset-0">
+        <Blob tone="champagne" className="-right-28 top-8 h-96 w-96" />
+        <Blob tone="sage" className="-left-24 bottom-8 h-80 w-80" />
+        <DotScatter
+          className="left-[4%] top-1/4 hidden text-clay-400 xl:grid"
+          rows={4}
+          cols={3}
+        />
+      </div>
 
       <div className="container-max relative z-10">
-        <div className="text-center mb-14">
-          <span className="section-label">What Drives Us</span>
-          <h2 className="heading-lg text-charcoal-800 dark:text-ivory-100">
-            Our Core Values
-          </h2>
-        </div>
+        <SectionHeading
+          eyebrow="What Drives Us"
+          title="Four things we"
+          accent="never trade away."
+          lead="They sound like poster words until a deadline slips or a cost runs over. That's when they actually count."
+          className="mb-16"
+        />
+
         <div
           ref={ref}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
           {VALUES.map((v, i) => (
             <div
               key={v.title}
               className={cn(
-                "card p-7 text-center group cursor-default transition-all duration-500",
-                inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                "card-lift group cursor-default p-8 text-center",
+                inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
               )}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
-              <div
-                className={cn(
-                  "w-12 h-12 mx-auto rounded-sm border flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300",
-                  v.bg
-                )}
-              >
-                <v.icon className={cn("w-5 h-5", v.color)} />
+              <div className={cn("icon-blob mx-auto mb-6 h-16 w-16", v.blob)}>
+                <v.icon className="h-6 w-6" />
               </div>
-              <h3 className="font-display text-lg font-semibold text-charcoal-800 dark:text-ivory-100 mb-2">
+              <h3 className="mb-2.5 font-display text-lg font-semibold text-navy-800 dark:text-sand-100">
                 {v.title}
               </h3>
-              <p className="font-body text-sm text-charcoal-500 dark:text-charcoal-300">
+              <p className="font-body text-sm leading-relaxed text-navy-500 dark:text-sand-400">
                 {v.desc}
               </p>
             </div>

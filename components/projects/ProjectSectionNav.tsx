@@ -34,17 +34,20 @@ export function ProjectSectionNav() {
   }, []);
 
   return (
-    <div className="sticky top-20 z-30 bg-ivory-100/95 dark:bg-charcoal-900/95 backdrop-blur-sm border-b border-ivory-200 dark:border-charcoal-700 -mx-4 px-4 sm:mx-0 sm:px-0 mb-8">
-      <nav className="flex items-center gap-1 overflow-x-auto no-scrollbar py-3">
+    /* A floating pill rail rather than a bordered strip — it reads as a
+       control, and matches the filter chips over on the listing page. */
+    <div className="sticky top-24 z-30 mb-10">
+      <nav className="no-scrollbar flex items-center gap-1.5 overflow-x-auto rounded-full border border-sand-300 bg-white/90 p-1.5 shadow-soft backdrop-blur-md dark:border-navy-600 dark:bg-navy-700/90">
         {SECTIONS.map(s => (
           <a
             key={s.id}
             href={`#${s.id}`}
+            aria-current={active === s.id ? 'true' : undefined}
             className={cn(
-              'flex-shrink-0 px-4 py-2 rounded-full text-xs font-medium font-body whitespace-nowrap transition-all duration-200',
+              'shrink-0 whitespace-nowrap rounded-full px-4 py-2 font-body text-xs font-medium transition-all duration-300',
               active === s.id
-                ? 'bg-gold-500 text-charcoal-900'
-                : 'text-charcoal-500 dark:text-charcoal-300 hover:bg-ivory-200 dark:hover:bg-charcoal-700'
+                ? 'bg-champagne-500 text-navy-900 shadow-gold-sm'
+                : 'text-navy-500 hover:bg-sand-100 hover:text-champagne-700 dark:text-sand-300 dark:hover:bg-navy-800',
             )}
           >
             {s.label}

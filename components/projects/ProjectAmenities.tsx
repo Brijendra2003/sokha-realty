@@ -1,22 +1,29 @@
-import { CheckCircle2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { ProjectAmenity } from '@/types';
+import { SubsectionHeading } from './SubsectionHeading';
 
 export function ProjectAmenities({ amenities }: { amenities: ProjectAmenity[] }) {
   if (!amenities?.length) return null;
 
   return (
-    <div id="amenities" className="scroll-mt-24">
-      <h2 className="heading-md text-charcoal-800 dark:text-ivory-100 mb-6">Amenities &amp; Facilities</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div id="amenities" className="scroll-anchor">
+      <SubsectionHeading eyebrow="Life Here" title="Amenities & facilities" tone="clay" />
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {amenities.map(group => (
-          <div key={group.category} className="card p-5">
-            <h3 className="font-display text-base font-semibold text-gold-500 mb-4">
+          <div key={group.category} className="card p-7">
+            <h3 className="mb-5 font-display text-lg font-semibold text-navy-800 dark:text-sand-100">
               {group.category}
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-3">
               {group.items.map(item => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-charcoal-600 dark:text-charcoal-300">
-                  <CheckCircle2 className="w-4 h-4 text-gold-400 flex-shrink-0 mt-0.5" />
+                <li
+                  key={item}
+                  className="flex items-start gap-3 font-body text-sm text-navy-600 dark:text-sand-300"
+                >
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage-100 text-sage-700 dark:bg-sage-500/20 dark:text-sage-300">
+                    <Check className="h-3 w-3" strokeWidth={3} />
+                  </span>
                   {item}
                 </li>
               ))}

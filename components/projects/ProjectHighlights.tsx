@@ -1,27 +1,33 @@
 import * as Icons from 'lucide-react';
 import type { ProjectHighlight } from '@/types';
+import { SubsectionHeading } from './SubsectionHeading';
 
 // Map icon name strings (stored in Firestore) to Lucide components
 const iconMap = Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>;
+
+/* Tints cycle so a row of highlight tiles reads as a hand-set group
+   rather than a uniform strip. */
+const BLOBS = ['blob-champagne', 'blob-clay', 'blob-sage'];
 
 export function ProjectHighlights({ highlights }: { highlights: ProjectHighlight[] }) {
   if (!highlights?.length) return null;
 
   return (
-    <div id="highlights" className="scroll-mt-24">
-      <h2 className="heading-md text-charcoal-800 dark:text-ivory-100 mb-6">Project Highlights</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {highlights.map(h => {
+    <div id="highlights" className="scroll-anchor">
+      <SubsectionHeading eyebrow="At a Glance" title="Project highlights" />
+
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        {highlights.map((h, i) => {
           const Icon = iconMap[h.icon] || Icons.Sparkles;
           return (
-            <div key={h.label} className="card p-4 text-center">
-              <div className="w-10 h-10 mx-auto rounded-sm bg-gold-100 dark:bg-gold-900/20 flex items-center justify-center mb-3">
-                <Icon className="w-4 h-4 text-gold-500" />
+            <div key={h.label} className="card-lift group p-6 text-center">
+              <div className={`icon-blob mx-auto mb-4 h-12 w-12 ${BLOBS[i % BLOBS.length]}`}>
+                <Icon className="h-5 w-5" />
               </div>
-              <p className="font-display text-base font-semibold text-charcoal-800 dark:text-ivory-100">
+              <p className="font-display text-lg font-semibold text-navy-800 dark:text-sand-100">
                 {h.value}
               </p>
-              <p className="font-mono text-2xs tracking-wide uppercase text-charcoal-400 mt-0.5">
+              <p className="mt-1 font-mono text-2xs uppercase tracking-wider text-navy-400 dark:text-sand-500">
                 {h.label}
               </p>
             </div>

@@ -1,125 +1,200 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState, useEffect, useCallback } from "react";
+import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Blob, Sprig } from "@/components/ui/Decor";
+import { cn } from "@/lib/utils";
 
 const TESTIMONIALS = [
   {
-    name: 'Rahul & Priya Sharma',
-    project: 'Sokha Serene Heights, Powai',
-    text: 'We have been living in our Sokha home for 3 years now. The quality of construction is exceptional — not a single crack or issue. The team was responsive right through the process.',
+    name: "Rahul & Priya Sharma",
+    project: "Sokha Serene Heights, Powai",
+    text: "Three years in our Sokha home and not a single crack or complaint. The team stayed responsive right through the process — and after it.",
     rating: 5,
-    type: '3 BHK Resident',
+    type: "3 BHK Residents",
+    initials: "RS",
+    tint: "blob-champagne",
   },
   {
-    name: 'Vikram Malhotra',
-    project: 'Sokha Greens, Kandivali',
-    text: 'Invested in a 2 BHK as a rental property. Sokha Realty delivered on time, and the rental yield has been consistently strong. Highly professional team.',
+    name: "Vikram Malhotra",
+    project: "Sokha Greens, Kandivali",
+    text: "I bought a 2 BHK purely as a rental. It was delivered on time and the yield has been consistently strong. Thoroughly professional outfit.",
     rating: 5,
-    type: 'Investor',
+    type: "Investor",
+    initials: "VM",
+    tint: "blob-clay",
   },
   {
-    name: 'Ananya & Siddharth Joshi',
-    project: 'Sokha Residences, Thane',
-    text: 'From site visits to possession, every interaction was smooth. The apartment quality is top-notch. Our children love the amenities and the green spaces.',
+    name: "Ananya & Siddharth Joshi",
+    project: "Sokha Residences, Thane",
+    text: "From the first site visit to possession, every interaction was smooth. Our children have taken over the green spaces entirely.",
     rating: 5,
-    type: '2 BHK Resident',
+    type: "2 BHK Residents",
+    initials: "AJ",
+    tint: "blob-sage",
   },
   {
-    name: 'Deepak Nair',
-    project: 'Sokha Commercial Centre, Andheri',
-    text: 'Purchased commercial space for my office. The location, design, and infrastructure are exactly what I needed. Sokha Realty lives up to its premium reputation.',
+    name: "Deepak Nair",
+    project: "Sokha Commercial Centre, Andheri",
+    text: "I moved my office here last year. The location, the design and the building services are exactly what was promised at booking.",
     rating: 5,
-    type: 'Commercial Owner',
+    type: "Commercial Owner",
+    initials: "DN",
+    tint: "blob-navy",
   },
 ];
 
+function TestimonialCard({
+  t,
+  featured,
+}: {
+  t: (typeof TESTIMONIALS)[number];
+  featured?: boolean;
+}) {
+  return (
+    <figure
+      className={cn(
+        "card relative flex h-full flex-col p-8",
+        featured && "lg:scale-[1.03] lg:shadow-soft-lg",
+      )}
+    >
+      <Quote className="h-7 w-7 shrink-0 text-clay-300 dark:text-clay-500/60" />
+
+      <div className="mt-4 flex items-center gap-1">
+        {Array.from({ length: t.rating }).map((_, i) => (
+          <Star
+            key={i}
+            className="h-3.5 w-3.5 fill-champagne-400 text-champagne-400"
+          />
+        ))}
+      </div>
+
+      <blockquote className="mt-4 flex-1 font-body text-[15px] leading-relaxed text-navy-600 dark:text-sand-300">
+        {t.text}
+      </blockquote>
+
+      <figcaption className="mt-7 flex items-center gap-4 border-t border-sand-300 pt-6 dark:border-navy-600">
+        {/* Initials medallion stands in for a photo we don't have rights to */}
+        <span
+          className={cn(
+            "icon-blob h-12 w-12 font-display text-sm font-semibold",
+            t.tint,
+          )}
+        >
+          {t.initials}
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-display font-semibold text-navy-800 dark:text-sand-100">
+            {t.name}
+          </p>
+          <p className="truncate font-mono text-2xs uppercase tracking-wider text-champagne-700 dark:text-champagne-400">
+            {t.type} · {t.project}
+          </p>
+        </div>
+      </figcaption>
+    </figure>
+  );
+}
+
 export function Testimonials() {
-  const [active,   setActive]   = useState(0);
-  const [isAutoPlay, setAutoPlay] = useState(true);
+  /* Desktop shows three at once; mobile pages through them one at a
+     time. One index drives both so the controls stay honest. */
+  const [start, setStart] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
+
+  const advance = useCallback(
+    (dir: 1 | -1) =>
+      setStart((s) => (s + dir + TESTIMONIALS.length) % TESTIMONIALS.length),
+    [],
+  );
 
   useEffect(() => {
-    if (!isAutoPlay) return;
-    const id = setInterval(() => {
-      setActive(a => (a + 1) % TESTIMONIALS.length);
-    }, 5500);
+    if (!autoPlay) return;
+    const id = setInterval(() => advance(1), 6000);
     return () => clearInterval(id);
-  }, [isAutoPlay]);
+  }, [autoPlay, advance]);
 
-  const go = (dir: 'prev' | 'next') => {
+  const go = (dir: 1 | -1) => {
     setAutoPlay(false);
-    setActive(a =>
-      dir === 'next'
-        ? (a + 1) % TESTIMONIALS.length
-        : (a - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
-    );
+    advance(dir);
   };
 
-  const t = TESTIMONIALS[active];
+  const visible = [0, 1, 2].map(
+    (offset) => TESTIMONIALS[(start + offset) % TESTIMONIALS.length],
+  );
 
   return (
-    <section className="section-py bg-ivory-100 dark:bg-charcoal-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-hero-pattern opacity-50" />
+    <section className="curve-top-lg curve-bottom-lg relative overflow-hidden bg-sage-50 py-24 dark:bg-navy-800 md:py-32">
+      <div className="pointer-events-none absolute inset-0">
+        <Blob tone="sage" className="-left-24 top-16 h-80 w-80" />
+        <Blob tone="clay" className="-right-24 bottom-16 h-80 w-80" />
+        <Sprig className="left-[5%] bottom-20 hidden h-28 w-20 rotate-[190deg] text-sage-500/40 lg:block" />
+        <Sprig className="right-[6%] top-24 hidden h-28 w-20 -rotate-12 text-clay-400/40 lg:block" />
+      </div>
 
       <div className="container-max relative z-10">
-        <div className="text-center mb-14">
-          <span className="section-label">Testimonials</span>
-          <h2 className="heading-lg text-charcoal-800 dark:text-ivory-100">
-            What Our Residents Say
-          </h2>
+        <SectionHeading
+          eyebrow="Kind Words"
+          title="What it's like to"
+          accent="live here."
+          lead="Unedited notes from residents and investors across our Mumbai portfolio."
+          className="mb-16"
+        />
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {visible.map((t, i) => (
+            <div
+              key={t.name}
+              className={cn(
+                "transition-all duration-500 ease-expo-out",
+                i === 1 && "hidden md:block",
+                i === 2 && "hidden lg:block",
+              )}
+            >
+              <TestimonialCard t={t} featured={i === 1} />
+            </div>
+          ))}
         </div>
 
-        <div className="max-w-3xl mx-auto relative">
-          {/* Quote card */}
-          <div className="card p-8 md:p-12 text-center relative overflow-hidden">
-            {/* Big quote mark */}
-            <Quote className="absolute top-6 right-6 w-12 h-12 text-gold-200 dark:text-gold-900" />
+        {/* Controls */}
+        <div className="mt-12 flex items-center justify-center gap-5">
+          <button
+            onClick={() => go(-1)}
+            aria-label="Previous testimonials"
+            className="btn-round"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
 
-            {/* Stars */}
-            <div className="flex items-center justify-center gap-1 mb-6">
-              {Array.from({ length: t.rating }).map((_, i) => (
-                <Star key={i} className="w-4 h-4 text-gold-400 fill-gold-400" />
-              ))}
-            </div>
-
-            {/* Quote text */}
-            <blockquote className="font-display text-xl md:text-2xl text-charcoal-700 dark:text-ivory-100 leading-relaxed italic mb-8">
-              "{t.text}"
-            </blockquote>
-
-            {/* Attribution */}
-            <div>
-              <p className="font-body font-semibold text-charcoal-800 dark:text-ivory-100">{t.name}</p>
-              <p className="font-mono text-xs text-gold-500 mt-1">{t.type} · {t.project}</p>
-            </div>
+          <div className="flex items-center gap-2">
+            {TESTIMONIALS.map((t, i) => (
+              <button
+                key={t.name}
+                onClick={() => {
+                  setAutoPlay(false);
+                  setStart(i);
+                }}
+                aria-label={`Show testimonial from ${t.name}`}
+                aria-current={i === start}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
+                  i === start
+                    ? "w-7 bg-champagne-500"
+                    : "w-2 bg-sand-400 hover:bg-champagne-300 dark:bg-navy-600",
+                )}
+              />
+            ))}
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <button onClick={() => go('prev')} className="w-10 h-10 rounded-full flex items-center justify-center border border-ivory-300 dark:border-charcoal-600 hover:border-gold-400 hover:text-gold-400 transition-all">
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-2">
-              {TESTIMONIALS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => { setAutoPlay(false); setActive(i); }}
-                  className={cn(
-                    'rounded-full transition-all duration-300',
-                    i === active
-                      ? 'w-6 h-2 bg-gold-500'
-                      : 'w-2 h-2 bg-ivory-300 dark:bg-charcoal-600 hover:bg-gold-300'
-                  )}
-                />
-              ))}
-            </div>
-
-            <button onClick={() => go('next')} className="w-10 h-10 rounded-full flex items-center justify-center border border-ivory-300 dark:border-charcoal-600 hover:border-gold-400 hover:text-gold-400 transition-all">
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            onClick={() => go(1)}
+            aria-label="Next testimonials"
+            className="btn-round"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </section>

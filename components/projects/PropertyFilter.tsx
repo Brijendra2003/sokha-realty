@@ -1,8 +1,10 @@
 "use client";
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Check, Search, SlidersHorizontal } from "lucide-react";
 import type { Project } from "@/types";
 import type { ProjectFilters } from "./ProjectClients";
+import { cn } from "@/lib/utils";
 
 interface PropertyFilterProps {
   projects: Project[];
@@ -51,6 +53,13 @@ export function PropertyFilter({
     location.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const activeCount =
+    filters.locations.length +
+    filters.configurations.length +
+    filters.statuses.length +
+    (filters.minBudget ? 1 : 0) +
+    (filters.maxBudget ? 1 : 0);
+
   const toggleLocation = (location: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -92,41 +101,59 @@ export function PropertyFilter({
   };
 
   return (
-    <aside className="sticky top-24 h-fit rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-charcoal-700 dark:bg-charcoal-800">
+    <aside className="sticky top-28 h-fit rounded-[28px] border border-sand-300 bg-white p-6 shadow-soft dark:border-navy-600 dark:bg-navy-700">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-charcoal-800 dark:text-white">
-          Filters
-        </h2>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <span className="icon-blob blob-champagne h-9 w-9">
+            <SlidersHorizontal className="h-4 w-4" />
+          </span>
+          <h2 className="font-display text-lg font-semibold text-navy-800 dark:text-sand-100">
+            Filters
+          </h2>
+          {activeCount > 0 && (
+            <span className="badge-clay">{activeCount}</span>
+          )}
+        </div>
 
         <button
           onClick={clearAll}
-          className="text-xs font-medium text-gold-500 hover:underline"
+          className="font-mono text-2xs uppercase tracking-label text-champagne-700 transition-colors hover:text-clay-600 dark:text-champagne-400"
         >
-          Clear All
+          Clear
         </button>
       </div>
 
       {/* Location */}
       <SectionTitle title="Location" />
 
-      <input
-        type="text"
-        placeholder="Search locality..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-gold-500 dark:border-charcoal-600 dark:bg-charcoal-900"
-      />
+      <div className="relative mb-4">
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-navy-400" />
+        <input
+          type="text"
+          placeholder="Search locality…"
+          aria-label="Search locality"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="form-input py-2.5 pl-10 text-sm"
+        />
+      </div>
 
-      <div className="mb-6 max-h-48 space-y-2 overflow-y-auto pr-2">
-        {filteredLocations.map((location) => (
-          <Checkbox
-            key={location}
-            label={location}
-            checked={filters.locations.includes(location)}
-            onChange={() => toggleLocation(location)}
-          />
-        ))}
+      <div className="no-scrollbar mb-6 max-h-48 space-y-1 overflow-y-auto pr-1">
+        {filteredLocations.length === 0 ? (
+          <p className="px-1 py-2 font-body text-xs text-navy-400 dark:text-sand-500">
+            No localities match “{search}”.
+          </p>
+        ) : (
+          filteredLocations.map((location) => (
+            <Checkbox
+              key={location}
+              label={location}
+              checked={filters.locations.includes(location)}
+              onChange={() => toggleLocation(location)}
+            />
+          ))
+        )}
       </div>
 
       <Divider />
@@ -134,7 +161,7 @@ export function PropertyFilter({
       {/* Configuration */}
       <SectionTitle title="Configuration" />
 
-      <div className="mb-6 space-y-2">
+      <div className="mb-6 space-y-1">
         {configurations.map((config) => (
           <Checkbox
             key={config}
@@ -150,40 +177,52 @@ export function PropertyFilter({
       {/* Budget */}
       <SectionTitle title="Budget" />
 
-      <div className="mb-6 grid grid-cols-2 gap-2">
-        <select
-          value={filters.minBudget ?? ""}
-          onChange={(e) =>
-            setFilters((prev) => ({
-              ...prev,
-              minBudget: e.target.value ? Number(e.target.value) : undefined,
-            }))
-          }
-          className="rounded-lg border border-gray-300 px-2 py-2 text-sm dark:border-charcoal-600 dark:bg-charcoal-900"
-        >
-          {budgetOptions.map((budget) => (
-            <option key={budget.label} value={budget.value ?? ""}>
-              {budget.label}
-            </option>
-          ))}
-        </select>
+      <div className="mb-6 grid grid-cols-2 gap-3">
+        <div>
+          <label htmlFor="min-budget" className="form-label">
+            Min
+          </label>
+          <select
+            id="min-budget"
+            value={filters.minBudget ?? ""}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                minBudget: e.target.value ? Number(e.target.value) : undefined,
+              }))
+            }
+            className="form-input py-2.5"
+          >
+            {budgetOptions.map((budget) => (
+              <option key={budget.label} value={budget.value ?? ""}>
+                {budget.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <select
-          value={filters.maxBudget ?? ""}
-          onChange={(e) =>
-            setFilters((prev) => ({
-              ...prev,
-              maxBudget: e.target.value ? Number(e.target.value) : undefined,
-            }))
-          }
-          className="rounded-lg border border-gray-300 px-2 py-2 text-sm dark:border-charcoal-600 dark:bg-charcoal-900"
-        >
-          {budgetOptions.map((budget) => (
-            <option key={budget.label} value={budget.value ?? ""}>
-              {budget.label}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label htmlFor="max-budget" className="form-label">
+            Max
+          </label>
+          <select
+            id="max-budget"
+            value={filters.maxBudget ?? ""}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                maxBudget: e.target.value ? Number(e.target.value) : undefined,
+              }))
+            }
+            className="form-input py-2.5"
+          >
+            {budgetOptions.map((budget) => (
+              <option key={budget.label} value={budget.value ?? ""}>
+                {budget.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <Divider />
@@ -191,7 +230,7 @@ export function PropertyFilter({
       {/* Status */}
       <SectionTitle title="Possession Status" />
 
-      <div className="space-y-2">
+      <div className="space-y-1">
         {(["Upcoming", "Ongoing", "Completed"] as Project["status"][]).map(
           (status) => (
             <Checkbox
@@ -210,14 +249,12 @@ export function PropertyFilter({
 /* ---------- Small Components ---------- */
 
 function Divider() {
-  return (
-    <div className="my-5 border-t border-gray-200 dark:border-charcoal-700" />
-  );
+  return <div className="my-5 border-t border-sand-300 dark:border-navy-600" />;
 }
 
 function SectionTitle({ title }: { title: string }) {
   return (
-    <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-charcoal-700 dark:text-charcoal-200">
+    <h3 className="mb-3 font-mono text-2xs font-medium uppercase tracking-label text-champagne-700 dark:text-champagne-400">
       {title}
     </h3>
   );
@@ -229,15 +266,30 @@ interface CheckboxProps {
   onChange: () => void;
 }
 
+/* A custom rounded control — the native checkbox can't be given the
+   pill/blob geometry the rest of the site uses. The real input stays in
+   the DOM (visually hidden) so keyboard and screen readers are unaffected. */
 function Checkbox({ label, checked, onChange }: CheckboxProps) {
   return (
-    <label className="flex cursor-pointer items-center gap-2 text-sm text-charcoal-600 dark:text-charcoal-300">
+    <label className="group flex cursor-pointer items-center gap-3 rounded-full px-2 py-1.5 font-body text-sm text-navy-600 transition-colors hover:bg-sand-100 dark:text-sand-300 dark:hover:bg-navy-800">
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 rounded border-gray-300 accent-yellow-500"
+        className="peer sr-only"
       />
+      <span
+        aria-hidden
+        className={cn(
+          "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all duration-200",
+          "peer-focus-visible:ring-2 peer-focus-visible:ring-champagne-500 peer-focus-visible:ring-offset-2",
+          checked
+            ? "border-champagne-500 bg-champagne-500 text-navy-900"
+            : "border-sand-400 bg-white group-hover:border-champagne-400 dark:border-navy-500 dark:bg-navy-800",
+        )}
+      >
+        {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+      </span>
       {label}
     </label>
   );

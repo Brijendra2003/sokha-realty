@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -68,19 +68,21 @@ export function EnquiryForm({
   if (submitted) {
     return (
       <div className={cn(
-        'card p-6 text-center',
-        variant === 'sticky' && 'sticky top-24'
+        'card p-8 text-center',
+        variant === 'sticky' && 'sticky top-28'
       )}>
-        <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-4" />
-        <h3 className="font-display text-xl font-semibold text-charcoal-800 dark:text-ivory-100 mb-2">
-          Thank You!
+        <span className="icon-blob blob-sage mx-auto mb-5 h-16 w-16">
+          <CheckCircle2 className="h-7 w-7" />
+        </span>
+        <h3 className="mb-2 font-display text-xl font-semibold text-navy-800 dark:text-sand-100">
+          Thank you!
         </h3>
-        <p className="font-body text-sm text-charcoal-500 dark:text-charcoal-300 mb-4">
+        <p className="mb-6 font-body text-sm text-navy-500 dark:text-sand-400">
           Our relationship manager will reach out to you within 30 minutes.
         </p>
         <button
           onClick={() => setSubmitted(false)}
-          className="text-xs font-medium text-gold-500 hover:text-gold-600"
+          className="btn-secondary !px-6 !py-2.5 text-xs"
         >
           Submit another enquiry
         </button>
@@ -90,18 +92,15 @@ export function EnquiryForm({
 
   return (
     <div className={cn(
-      'card p-6',
-      variant === 'sticky' && 'sticky top-24'
+      'card p-7',
+      variant === 'sticky' && 'sticky top-28'
     )}>
       {/* Header */}
-      <div className="mb-5">
-        <div className="gold-accent-line" />
-        <h3 className="font-display text-xl font-semibold text-charcoal-800 dark:text-ivory-100">
+      <div className="mb-6">
+        <span className="eyebrow-pill mb-3">{subtitle}</span>
+        <h3 className="font-display text-xl font-semibold text-navy-800 dark:text-sand-100">
           {title}
         </h3>
-        <p className="font-body text-sm text-charcoal-500 dark:text-charcoal-300 mt-1">
-          {subtitle}
-        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
@@ -109,12 +108,12 @@ export function EnquiryForm({
         <div>
           <label htmlFor="name" className="form-label">Full Name</label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
+            <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
             <input
               id="name"
               type="text"
               placeholder="Enter your name"
-              className="form-input !pl-10"
+              className="form-input !pl-11"
               {...register('name')}
             />
           </div>
@@ -125,15 +124,15 @@ export function EnquiryForm({
         <div>
           <label htmlFor="phone" className="form-label">Mobile Number</label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
-            <span className="absolute left-10 top-1/2 -translate-y-1/2 text-sm text-charcoal-400 font-mono">+91</span>
+            <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
+            <span className="absolute left-11 top-1/2 -translate-y-1/2 font-mono text-sm text-navy-400">+91</span>
             <input
               id="phone"
               type="tel"
               inputMode="numeric"
               maxLength={10}
               placeholder="98765 43210"
-              className="form-input !pl-20"
+              className="form-input !pl-[5.5rem]"
               {...register('phone')}
             />
           </div>
@@ -142,14 +141,14 @@ export function EnquiryForm({
 
         {/* Email (optional) */}
         <div>
-          <label htmlFor="email" className="form-label">Email <span className="normal-case text-charcoal-400">(optional)</span></label>
+          <label htmlFor="email" className="form-label">Email <span className="normal-case text-navy-400">(optional)</span></label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
+            <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
             <input
               id="email"
               type="email"
               placeholder="you@example.com"
-              className="form-input !pl-10"
+              className="form-input !pl-11"
               {...register('email')}
             />
           </div>
@@ -158,14 +157,14 @@ export function EnquiryForm({
 
         {/* Message (optional) */}
         <div>
-          <label htmlFor="message" className="form-label">Message <span className="normal-case text-charcoal-400">(optional)</span></label>
+          <label htmlFor="message" className="form-label">Message <span className="normal-case text-navy-400">(optional)</span></label>
           <div className="relative">
-            <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-charcoal-400" />
+            <MessageSquare className="absolute left-4 top-4 h-4 w-4 text-navy-400" />
             <textarea
               id="message"
               rows={3}
               placeholder="Tell us what you're looking for…"
-              className="form-input !pl-10 resize-none"
+              className="form-input !pl-11 resize-none"
               {...register('message')}
             />
           </div>
@@ -181,7 +180,7 @@ export function EnquiryForm({
         >
           {loading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Submitting…
+              <Loader2 className="h-4 w-4 animate-spin" /> Submitting…
             </>
           ) : (
             <>
@@ -190,10 +189,11 @@ export function EnquiryForm({
           )}
         </button>
 
-        <p className="text-2xs text-center text-charcoal-400 leading-relaxed">
+        <p className="text-center text-2xs leading-relaxed text-navy-400 dark:text-sand-500">
           By submitting, you agree to our Privacy Policy. Protected by reCAPTCHA.
         </p>
       </form>
     </div>
   );
 }
+

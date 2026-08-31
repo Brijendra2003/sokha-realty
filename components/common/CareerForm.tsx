@@ -72,14 +72,16 @@ export function CareerForm({ jobTitle }: { jobTitle?: string }) {
   if (submitted) {
     return (
       <div className="card p-10 text-center">
-        <CheckCircle2 className="w-14 h-14 text-green-500 mx-auto mb-4" />
-        <h3 className="font-display text-2xl font-semibold text-charcoal-800 dark:text-ivory-100 mb-2">
-          Application Received!
+        <span className="icon-blob blob-sage mx-auto mb-6 h-20 w-20">
+          <CheckCircle2 className="h-8 w-8" />
+        </span>
+        <h3 className="mb-2 font-display text-2xl font-semibold text-navy-800 dark:text-sand-100">
+          Application received!
         </h3>
-        <p className="font-body text-charcoal-500 dark:text-charcoal-300 mb-5 max-w-md mx-auto">
-          Thank you for your interest in joining Sokha Realty. Our HR team will review your application and reach out if there's a match.
+        <p className="mx-auto mb-7 max-w-md font-body text-navy-500 dark:text-sand-400">
+          Thank you for your interest in joining Sokha Realty. Our HR team will review your application and reach out if there&apos;s a match.
         </p>
-        <button onClick={() => setSubmitted(false)} className="text-sm font-medium text-gold-500 hover:text-gold-600">
+        <button onClick={() => setSubmitted(false)} className="btn-secondary">
           Submit another application
         </button>
       </div>
@@ -87,13 +89,13 @@ export function CareerForm({ jobTitle }: { jobTitle?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="card p-6 md:p-8 space-y-5" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="card space-y-5 p-7 md:p-9" noValidate>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="name" className="form-label">Full Name</label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
-            <input id="name" className="form-input !pl-10" placeholder="Your full name" {...register('name')} />
+            <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
+            <input id="name" className="form-input !pl-11" placeholder="Your full name" {...register('name')} />
           </div>
           {errors.name && <p className="form-error">{errors.name.message}</p>}
         </div>
@@ -101,9 +103,9 @@ export function CareerForm({ jobTitle }: { jobTitle?: string }) {
         <div>
           <label htmlFor="phone" className="form-label">Mobile Number</label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
-            <span className="absolute left-10 top-1/2 -translate-y-1/2 text-sm text-charcoal-400 font-mono">+91</span>
-            <input id="phone" type="tel" inputMode="numeric" maxLength={10} className="form-input !pl-20" placeholder="98765 43210" {...register('phone')} />
+            <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
+            <span className="absolute left-11 top-1/2 -translate-y-1/2 font-mono text-sm text-navy-400">+91</span>
+            <input id="phone" type="tel" inputMode="numeric" maxLength={10} className="form-input !pl-[5.5rem]" placeholder="98765 43210" {...register('phone')} />
           </div>
           {errors.phone && <p className="form-error">{errors.phone.message}</p>}
         </div>
@@ -113,8 +115,8 @@ export function CareerForm({ jobTitle }: { jobTitle?: string }) {
         <div>
           <label htmlFor="email" className="form-label">Email Address</label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
-            <input id="email" type="email" className="form-input !pl-10" placeholder="you@example.com" {...register('email')} />
+            <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
+            <input id="email" type="email" className="form-input !pl-11" placeholder="you@example.com" {...register('email')} />
           </div>
           {errors.email && <p className="form-error">{errors.email.message}</p>}
         </div>
@@ -122,8 +124,8 @@ export function CareerForm({ jobTitle }: { jobTitle?: string }) {
         <div>
           <label htmlFor="experience" className="form-label">Experience</label>
           <div className="relative">
-            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-400" />
-            <select id="experience" className="form-input !pl-10 appearance-none" {...register('experience')}>
+            <Briefcase className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
+            <select id="experience" className="form-input !pl-11 appearance-none" {...register('experience')}>
               <option value="">Select experience</option>
               <option value="Fresher">Fresher</option>
               <option value="1-3 years">1–3 years</option>
@@ -142,40 +144,49 @@ export function CareerForm({ jobTitle }: { jobTitle?: string }) {
       <div>
         <label className="form-label">Resume (PDF/DOC, max 5MB)</label>
         {resume ? (
-          <div className="flex items-center justify-between p-4 rounded-sm border border-ivory-300 dark:border-charcoal-600 bg-ivory-50 dark:bg-charcoal-800">
-            <div className="flex items-center gap-3 min-w-0">
-              <FileText className="w-5 h-5 text-gold-500 flex-shrink-0" />
-              <span className="text-sm text-charcoal-700 dark:text-ivory-200 truncate">{resume.name}</span>
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-sand-300 bg-sand-100 p-4 dark:border-navy-600 dark:bg-navy-800">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="icon-blob blob-champagne h-10 w-10">
+                <FileText className="h-4 w-4" />
+              </span>
+              <span className="truncate font-body text-sm text-navy-700 dark:text-sand-200">{resume.name}</span>
             </div>
-            <button type="button" onClick={() => setResume(null)} className="text-charcoal-400 hover:text-red-500 flex-shrink-0">
-              <X className="w-4 h-4" />
+            <button
+              type="button"
+              onClick={() => setResume(null)}
+              aria-label="Remove resume"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-navy-400 transition-colors hover:bg-clay-100 hover:text-clay-600 dark:hover:bg-navy-700"
+            >
+              <X className="h-4 w-4" />
             </button>
           </div>
         ) : (
           <div
             {...getRootProps()}
-            className={`flex flex-col items-center justify-center gap-2 p-8 rounded-sm border-2 border-dashed cursor-pointer transition-colors ${
+            className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-[24px] border-2 border-dashed p-9 transition-colors ${
               isDragActive
-                ? 'border-gold-400 bg-gold-50 dark:bg-gold-900/10'
-                : 'border-ivory-300 dark:border-charcoal-600 hover:border-gold-300'
+                ? 'border-champagne-400 bg-champagne-50 dark:bg-champagne-500/10'
+                : 'border-sand-400 hover:border-champagne-400 hover:bg-sand-100 dark:border-navy-600 dark:hover:bg-navy-800'
             }`}
           >
             <input {...getInputProps()} />
-            <Upload className="w-6 h-6 text-charcoal-400" />
-            <p className="text-sm text-charcoal-500 dark:text-charcoal-300 text-center">
-              Drag &amp; drop your resume, or <span className="text-gold-500 font-medium">browse</span>
+            <span className="icon-blob blob-clay h-12 w-12">
+              <Upload className="h-5 w-5" />
+            </span>
+            <p className="text-center font-body text-sm text-navy-500 dark:text-sand-400">
+              Drag &amp; drop your resume, or <span className="font-semibold text-champagne-700 dark:text-champagne-400">browse</span>
             </p>
           </div>
         )}
         {loading && uploadPct > 0 && uploadPct < 100 && (
-          <div className="mt-2 h-1.5 bg-ivory-200 dark:bg-charcoal-700 rounded-full overflow-hidden">
-            <div className="h-full bg-gold-500 transition-all duration-300" style={{ width: `${uploadPct}%` }} />
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-sand-300 dark:bg-navy-700">
+            <div className="h-full bg-gold-gradient transition-all duration-300" style={{ width: `${uploadPct}%` }} />
           </div>
         )}
       </div>
 
       <div>
-        <label htmlFor="coverLetter" className="form-label">Cover Letter <span className="normal-case text-charcoal-400">(optional)</span></label>
+        <label htmlFor="coverLetter" className="form-label">Cover Letter <span className="normal-case text-navy-400">(optional)</span></label>
         <textarea
           id="coverLetter"
           rows={4}

@@ -57,24 +57,24 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       />
 
       <Navbar />
-      <main className="pt-20">
+      <main className="bg-sand-100 dark:bg-navy-900">
 
-        {/* Full-width elevation hero */}
+        {/* Framed elevation hero */}
         <ProjectHero project={project} />
 
         {/* Breadcrumb */}
         <div className="container-max pt-6">
-          <nav className="flex items-center gap-2 text-xs text-charcoal-400 font-body">
-            <Link href="/" className="hover:text-gold-500">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link href="/projects" className="hover:text-gold-500">Projects</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-charcoal-600 dark:text-charcoal-300">{project.name}</span>
+          <nav className="flex items-center gap-2 font-body text-xs text-navy-400 dark:text-sand-500">
+            <Link href="/" className="transition-colors hover:text-champagne-700 dark:hover:text-champagne-400">Home</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link href="/projects" className="transition-colors hover:text-champagne-700 dark:hover:text-champagne-400">Projects</Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-navy-600 dark:text-sand-300">{project.name}</span>
           </nav>
         </div>
 
         {/* Two-column layout: left content scrolls, right form sticks */}
-        <div className="container-max py-10">
+        <div className="container-max py-12">
           <div className="project-layout">
 
             {/* ── LEFT: Content ── */}
@@ -95,16 +95,19 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
                 {/* Gallery */}
                 {project.galleryImages?.length > 0 && (
-                  <div id="gallery" className="scroll-mt-24">
-                    <h2 className="heading-md text-charcoal-800 dark:text-ivory-100 mb-6">Gallery</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div id="gallery" className="scroll-anchor">
+                    <span className="eyebrow-pill mb-4">Gallery</span>
+                    <h2 className="heading-md mb-7 text-navy-800 dark:text-sand-100">
+                      A closer look
+                    </h2>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                       {project.galleryImages.map((img, i) => (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           key={i}
                           src={img}
                           alt={`${project.name} gallery ${i + 1}`}
-                          className="rounded-lg w-full h-40 object-cover hover:opacity-90 transition-opacity cursor-pointer"
+                          className="h-40 w-full rounded-[20px] object-cover shadow-soft transition-all duration-400 ease-expo-out hover:-translate-y-1 hover:shadow-soft-lg"
                           loading="lazy"
                         />
                       ))}
@@ -113,9 +116,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 )}
 
                 {/* Disclaimer */}
-                <div className="card p-5 bg-ivory-50 dark:bg-charcoal-800/50">
-                  <p className="text-xs text-charcoal-400 leading-relaxed">
-                    Disclaimer: This is not an official offer or contract of any sort. Information given here is purely
+                <div className="legal-callout">
+                  <p className="text-xs leading-relaxed">
+                    <strong>Disclaimer:</strong> This is not an official offer or contract of any sort. Information given here is purely
                     indicative and provided to give a roughly stated overview to interested parties for our products.
                     {project.rera && ` MahaRERA Registration No: ${project.rera}.`} The promoter has registered the
                     project under MahaRERA. Website: maharera.mahaonline.gov.in

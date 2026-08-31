@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Mail, Phone, ArrowUpRight } from "lucide-react";
+import { Blob, Sparkle } from "@/components/ui/Decor";
 
 export type LegalSection = {
   /** Anchor id — also used by the contents rail. */
@@ -42,66 +43,67 @@ export function LegalLayout({
     <>
       <Navbar />
 
-      <main className="pt-20">
+      <main>
         {/* ── Header band ─────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-navy-900 text-sand-100">
-          <div className="absolute inset-0 bg-grid opacity-60" aria-hidden />
-          <div className="absolute inset-0 bg-hero-pattern" aria-hidden />
-          <div className="absolute inset-0 bg-noise" aria-hidden />
+        <section className="relative overflow-hidden bg-sand-100 pb-16 pt-28 dark:bg-navy-900 md:pb-20 md:pt-36">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-0 bg-warm-wash opacity-60 dark:opacity-20" />
+            <Blob tone="champagne" className="-right-32 top-8 h-96 w-96" />
+            <Blob tone="clay" className="-left-28 bottom-0 h-72 w-72" />
+          </div>
 
-          <div className="container-max relative py-16 md:py-24">
-            <nav aria-label="Breadcrumb" className="mb-8">
-              <ol className="flex items-center gap-2 font-mono text-2xs uppercase tracking-label text-navy-300">
+          <div className="container-max relative z-10">
+            <nav aria-label="Breadcrumb" className="mb-7">
+              <ol className="flex items-center gap-2 font-mono text-2xs uppercase tracking-label text-navy-400 dark:text-sand-500">
                 <li>
                   <Link
                     href="/"
-                    className="hover:text-champagne-400 transition-colors"
+                    className="transition-colors hover:text-champagne-700 dark:hover:text-champagne-400"
                   >
                     Home
                   </Link>
                 </li>
-                <li aria-hidden className="text-navy-500">
+                <li aria-hidden className="text-sand-400">
                   /
                 </li>
-                <li className="text-champagne-400">{title}</li>
+                <li className="text-champagne-700 dark:text-champagne-400">
+                  {title}
+                </li>
               </ol>
             </nav>
 
-            <p className="eyebrow mb-5 !text-champagne-400">{eyebrow}</p>
+            <span className="eyebrow-pill mb-5">
+              <Sparkle className="h-2.5 w-2.5" />
+              {eyebrow}
+            </span>
 
-            <h1 className="heading-xl max-w-3xl text-balance">{title}</h1>
+            <h1 className="heading-xl max-w-3xl text-balance text-navy-800 dark:text-sand-100">
+              {title}
+            </h1>
 
-            <p className="lead mt-6 max-w-2xl !text-navy-200 text-pretty">
-              {intro}
-            </p>
+            <p className="lead mt-6 max-w-2xl text-pretty">{intro}</p>
 
-            <dl className="mt-10 flex flex-wrap gap-x-12 gap-y-4 border-t border-navy-600 pt-6">
-              <div>
-                <dt className="font-mono text-2xs uppercase tracking-label text-navy-400">
-                  Last updated
-                </dt>
-                <dd className="mt-1.5 font-mono text-sm text-sand-200">
-                  {updated}
-                </dd>
-              </div>
-              {effective && (
-                <div>
-                  <dt className="font-mono text-2xs uppercase tracking-label text-navy-400">
-                    Effective from
+            {/* Document metadata as soft chips rather than a bare rule */}
+            <dl className="mt-10 flex flex-wrap gap-3">
+              {[
+                { term: "Last updated", value: updated },
+                ...(effective
+                  ? [{ term: "Effective from", value: effective }]
+                  : []),
+                { term: "Applies to", value: "sokharealty.com" },
+              ].map((item) => (
+                <div
+                  key={item.term}
+                  className="rounded-2xl border border-sand-300 bg-white px-5 py-3 shadow-soft dark:border-navy-600 dark:bg-navy-700"
+                >
+                  <dt className="font-mono text-2xs uppercase tracking-label text-navy-400 dark:text-sand-500">
+                    {item.term}
                   </dt>
-                  <dd className="mt-1.5 font-mono text-sm text-sand-200">
-                    {effective}
+                  <dd className="mt-1 font-mono text-sm text-navy-700 dark:text-sand-200">
+                    {item.value}
                   </dd>
                 </div>
-              )}
-              <div>
-                <dt className="font-mono text-2xs uppercase tracking-label text-navy-400">
-                  Applies to
-                </dt>
-                <dd className="mt-1.5 font-mono text-sm text-sand-200">
-                  sokharealty.com
-                </dd>
-              </div>
+              ))}
             </dl>
           </div>
         </section>
@@ -182,7 +184,7 @@ export function LegalLayout({
                 </div>
 
                 {/* Contact card */}
-                <div className="mt-20 rounded-lg border border-sand-300 dark:border-navy-600 bg-white dark:bg-navy-700 p-8 shadow-card dark:shadow-dark-card">
+                <div className="mt-20 rounded-[28px] border border-sand-300 bg-white p-8 shadow-soft dark:border-navy-600 dark:bg-navy-700 dark:shadow-dark-card">
                   <p className="section-label">Questions about this document?</p>
                   <h3 className="heading-sm text-navy-800 dark:text-sand-100">
                     Talk to our compliance desk
@@ -227,7 +229,7 @@ export function LegalLayout({
                       <li key={p.href}>
                         <Link
                           href={p.href}
-                          className="block rounded-sm border border-sand-300 dark:border-navy-600 px-4 py-3 text-sm text-navy-600 dark:text-sand-300 hover:border-champagne-400 transition-colors"
+                          className="block rounded-2xl border border-sand-300 bg-white px-4 py-3 text-sm text-navy-600 transition-colors hover:border-champagne-400 dark:border-navy-600 dark:bg-navy-700 dark:text-sand-300"
                         >
                           {p.label}
                         </Link>

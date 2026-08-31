@@ -4,7 +4,9 @@ import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
 import { StatsSection } from "@/components/home/StatsSection";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
+import { OurStory } from "@/components/home/OurStory";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+import { ProcessSection } from "@/components/home/ProcessSection";
 import { Testimonials } from "@/components/home/Testimonials";
 import { LatestBlogs } from "@/components/home/LatestBlogs";
 import { CtaSection } from "@/components/home/CtaSection";
@@ -40,9 +42,13 @@ export default async function HomePage() {
         {/* <Hero /> */}
         <Hero2/>
         {/* <HeroSection /> */}
+        {/* Narrative order: proof → portfolio → who we are → why us →
+            how it works → what residents say → journal → book a visit. */}
         <StatsSection />
         <FeaturedProjects projects={projects} />
+        <OurStory />
         <WhyChooseUs />
+        <ProcessSection />
         <Testimonials />
         <LatestBlogs blogs={blogs} />
         <CtaSection />

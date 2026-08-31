@@ -4,8 +4,13 @@
 @tailwind utilities;
 
 /* ════════════════════════════════════════════════════════════════════
-   Sokha Realty — "Midnight Navy & Champagne"
+   Sokha Realty — "Warm Organic Luxury"
    Fonts: Fraunces (display) · Plus Jakarta Sans (body) · JetBrains Mono
+
+   Shape language: pill CTAs, soft 28px cards, organic blobs behind
+   icons, arched photography, curved bands between sections. Colour
+   stays navy + brass on warm paper, with terracotta and sage as the
+   supporting accent notes.
    ════════════════════════════════════════════════════════════════════ */
 
 /* ── Design tokens ──────────────────────────────────────────────── */
@@ -22,9 +27,16 @@
   --navy-800: #0f1e2e;
   --navy: #0a1622;
 
+  /* Support accents */
+  --clay: #c96a47;
+  --clay-300: #e9a388;
+  --sage: #5c8464;
+  --sage-300: #9fbca3;
+
   /* Warm paper */
-  --sand-100: #fbf9f6;
-  --sand-300: #e6e0d8;
+  --sand-100: #fbf7f1;
+  --sand-200: #f5efe6;
+  --sand-300: #e8e0d4;
 
   /* Legacy aliases kept for any inline var() usage */
   --gold: var(--champagne);
@@ -35,8 +47,12 @@
 
   /* Surfaces resolved per theme */
   --surface: #ffffff;
-  --surface-sunk: #fbf9f6;
-  --hairline: #e6e0d8;
+  --surface-sunk: #fbf7f1;
+  --hairline: #e8e0d4;
+
+  /* Radii of the shape language, exposed for inline use */
+  --r-card: 28px;
+  --r-pill: 999px;
 }
 
 .dark {
@@ -64,11 +80,11 @@
   }
 
   ::selection {
-    background-color: rgba(185, 139, 78, 0.28);
+    background-color: rgba(201, 106, 71, 0.22);
     color: inherit;
   }
 
-  /* Scrollbar — slim navy track, champagne thumb */
+  /* Scrollbar — slim, champagne thumb */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -124,8 +140,8 @@
   /* Consistent, visible keyboard focus everywhere */
   :focus-visible {
     outline: 2px solid var(--champagne);
-    outline-offset: 2px;
-    border-radius: 2px;
+    outline-offset: 3px;
+    border-radius: 999px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -160,15 +176,18 @@
   }
 
   /* ── Buttons ─────────────────────────────────────────────────────
+     Every CTA is a pill. The arrow inside slides on hover, which is
+     the single interaction motif repeated across the whole site.
      Primary  — champagne fill, navy ink (8.4:1)
      Secondary— hairline outline, fills on hover
+     Clay     — terracotta fill, for the second CTA in a pair
      Ghost    — text only
      Navy     — solid navy, for use on light/champagne surfaces
      ─────────────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2
+    @apply relative inline-flex items-center justify-center gap-2.5
            bg-gold-gradient text-navy-900 font-body font-semibold text-sm
-           px-7 py-3.5 rounded-sm overflow-hidden
+           px-7 py-3.5 rounded-full overflow-hidden
            shadow-gold hover:shadow-gold-lg
            transition-all duration-300 hover:-translate-y-0.5
            active:translate-y-0
@@ -190,15 +209,27 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2
-           bg-transparent border border-champagne-500 text-champagne-700
+    @apply inline-flex items-center justify-center gap-2.5
+           bg-white/70 dark:bg-transparent
+           border border-champagne-500 text-champagne-700
            dark:text-champagne-400
            font-body font-semibold text-sm
-           px-7 py-3.5 rounded-sm
+           px-7 py-3.5 rounded-full
            hover:bg-champagne-500 hover:text-navy-900 hover:border-champagne-500
            dark:hover:text-navy-900
+           hover:-translate-y-0.5
            transition-all duration-300
            focus:outline-none focus-visible:ring-2 focus-visible:ring-champagne-500
+           focus-visible:ring-offset-2 dark:focus-visible:ring-offset-navy-900;
+  }
+
+  .btn-clay {
+    @apply inline-flex items-center justify-center gap-2.5
+           bg-clay-500 text-white font-body font-semibold text-sm
+           px-7 py-3.5 rounded-full
+           hover:bg-clay-600 shadow-soft hover:shadow-soft-lg
+           transition-all duration-300 hover:-translate-y-0.5
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-clay-400
            focus-visible:ring-offset-2 dark:focus-visible:ring-offset-navy-900;
   }
 
@@ -207,32 +238,50 @@
            text-navy-600 dark:text-sand-300
            hover:text-champagne-700 dark:hover:text-champagne-400
            font-body font-medium text-sm
-           px-4 py-2 rounded-sm
+           px-4 py-2 rounded-full
            transition-colors duration-200;
   }
 
   .btn-navy {
-    @apply inline-flex items-center justify-center gap-2
+    @apply inline-flex items-center justify-center gap-2.5
            bg-navy-800 text-sand-100 font-body font-semibold text-sm
-           px-7 py-3.5 rounded-sm
-           hover:bg-navy-700 shadow-card hover:shadow-card-hover
+           px-7 py-3.5 rounded-full
+           hover:bg-navy-700 shadow-soft hover:shadow-soft-lg
            transition-all duration-300 hover:-translate-y-0.5
            focus:outline-none focus-visible:ring-2 focus-visible:ring-champagne-500
            focus-visible:ring-offset-2;
   }
 
-  /* ── Cards ── */
+  /* Small circular icon button — carousel arrows, close buttons */
+  .btn-round {
+    @apply inline-flex items-center justify-center w-11 h-11 rounded-full
+           border border-sand-300 dark:border-navy-600
+           bg-white dark:bg-navy-700
+           text-navy-600 dark:text-sand-200
+           hover:bg-champagne-500 hover:text-navy-900 hover:border-champagne-500
+           shadow-soft transition-all duration-300
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-champagne-500;
+  }
+
+  /* ── Cards ───────────────────────────────────────────────────────
+     Generously rounded and warmly shadowed. The hairline is kept —
+     it stops white cards dissolving into the sand paper. */
   .card {
     @apply bg-white dark:bg-navy-700
-           rounded-lg border border-sand-300 dark:border-navy-600
-           shadow-card hover:shadow-card-hover
+           rounded-[28px] border border-sand-300 dark:border-navy-600
+           shadow-soft hover:shadow-soft-lg
            dark:shadow-dark-card dark:hover:shadow-dark-card-hover
            transition-all duration-400 ease-expo-out;
   }
 
   /* Card that lifts and warms its border on hover */
   .card-lift {
-    @apply card hover:-translate-y-1 hover:border-champagne-300 dark:hover:border-champagne-700;
+    @apply card hover:-translate-y-1.5 hover:border-champagne-300 dark:hover:border-champagne-700;
+  }
+
+  /* Flat tinted panel — the soft pastel tiles used for stats and notes */
+  .tile {
+    @apply rounded-[24px] p-6 border border-transparent transition-all duration-400 ease-expo-out;
   }
 
   /* ── Section rhythm ── */
@@ -250,9 +299,10 @@
   }
 
   /* ── Eyebrow / section label ──
-     Uses champagne-700 on light for a 6.2:1 contrast at 11px. */
+     Small caps brass label that sits above every section heading.
+     champagne-700 on paper is 6.2:1 at 11px. */
   .section-label {
-    @apply font-mono text-2xs font-medium tracking-label uppercase
+    @apply block font-mono text-2xs font-medium tracking-label uppercase
            text-champagne-700 dark:text-champagne-400 mb-3;
   }
 
@@ -264,6 +314,21 @@
   .eyebrow::before {
     content: "";
     @apply w-8 h-px bg-champagne-500;
+  }
+
+  /* Pill-shaped eyebrow — the reference language's centred section tag */
+  .eyebrow-pill {
+    @apply inline-flex items-center gap-2 rounded-full
+           bg-champagne-100 dark:bg-champagne-500/15
+           px-4 py-1.5 font-mono text-2xs font-medium tracking-label uppercase
+           text-champagne-700 dark:text-champagne-300;
+  }
+
+  .eyebrow-pill-clay {
+    @apply inline-flex items-center gap-2 rounded-full
+           bg-clay-100 dark:bg-clay-500/15
+           px-4 py-1.5 font-mono text-2xs font-medium tracking-label uppercase
+           text-clay-700 dark:text-clay-300;
   }
 
   /* ── Headings ── */
@@ -283,6 +348,22 @@
     @apply font-display text-xl sm:text-2xl font-semibold;
   }
 
+  /* The italic second line every reference hero uses to soften a
+     heading. Fraunces italic, brass, with a hand-drawn underline. */
+  .script-accent {
+    @apply relative inline-block font-display italic font-normal
+           text-champagne-600 dark:text-champagne-400;
+  }
+  .script-accent::after {
+    content: "";
+    @apply absolute left-0 right-0 -bottom-1 h-[6px]
+           bg-no-repeat bg-[length:100%_100%] opacity-70;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5.5C40 2 78 1.6 116 3.2c24 1 46 2.4 82 1.1' stroke='%23C96A47' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+  .script-accent-clay {
+    @apply text-clay-500 dark:text-clay-300;
+  }
+
   /* Lead paragraph under a heading */
   .lead {
     @apply text-base sm:text-lg text-navy-500 dark:text-sand-400 leading-relaxed;
@@ -290,12 +371,12 @@
 
   /* ── Forms ── */
   .form-input {
-    @apply w-full px-4 py-3 rounded-sm text-sm font-body
+    @apply w-full px-5 py-3.5 rounded-2xl text-sm font-body
            bg-white dark:bg-navy-800
            border border-sand-300 dark:border-navy-600
            text-navy-800 dark:text-sand-100
            placeholder-navy-400 dark:placeholder-navy-400
-           focus:outline-none focus:ring-2 focus:ring-champagne-500/60
+           focus:outline-none focus:ring-2 focus:ring-champagne-500/50
            focus:border-champagne-500
            transition duration-200;
   }
@@ -306,12 +387,12 @@
   }
 
   .form-error {
-    @apply text-red-600 dark:text-red-400 text-xs mt-1.5 font-body;
+    @apply text-clay-600 dark:text-clay-300 text-xs mt-1.5 font-body;
   }
 
   /* ── Badges ── */
   .badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full
+    @apply inline-flex items-center px-3 py-1 rounded-full
            text-2xs font-mono font-medium tracking-wider uppercase;
   }
 
@@ -321,13 +402,18 @@
   }
 
   .badge-green {
-    @apply badge bg-emerald-50 text-emerald-800
-           dark:bg-emerald-500/15 dark:text-emerald-300;
+    @apply badge bg-sage-100 text-sage-700
+           dark:bg-sage-500/20 dark:text-sage-200;
   }
 
   .badge-blue {
     @apply badge bg-navy-100 text-navy-700
            dark:bg-navy-500/25 dark:text-navy-200;
+  }
+
+  .badge-clay {
+    @apply badge bg-clay-100 text-clay-700
+           dark:bg-clay-500/20 dark:text-clay-200;
   }
 
   /* ── Sticky sidebar layout ── */
@@ -355,7 +441,7 @@
     @apply mb-5 pl-5;
   }
   .prose-custom ul {
-    @apply list-disc marker:text-champagne-500;
+    @apply list-disc marker:text-clay-400;
   }
   .prose-custom ol {
     @apply list-decimal marker:text-champagne-600 marker:font-mono;
@@ -372,10 +458,11 @@
     @apply font-semibold text-navy-800 dark:text-sand-100;
   }
   .prose-custom img {
-    @apply rounded-lg my-8 w-full;
+    @apply rounded-[28px] my-8 w-full;
   }
   .prose-custom blockquote {
-    @apply border-l-2 border-champagne-500 pl-5 my-8
+    @apply rounded-[24px] bg-champagne-50 dark:bg-champagne-500/10
+           border-l-4 border-clay-400 pl-6 pr-5 py-5 my-8
            font-display text-lg italic text-navy-600 dark:text-sand-300;
   }
 
@@ -397,7 +484,7 @@
     @apply mb-0;
   }
   .legal-prose ul {
-    @apply list-disc pl-5 space-y-2 marker:text-champagne-500;
+    @apply list-disc pl-5 space-y-2 marker:text-clay-400;
   }
   .legal-prose ol {
     @apply list-decimal pl-5 space-y-2 marker:text-champagne-600 marker:font-mono;
@@ -427,9 +514,9 @@
 
   /* Callout box for "important" legal notes */
   .legal-callout {
-    @apply relative rounded-sm border border-champagne-300 dark:border-champagne-700
+    @apply relative rounded-[24px] border border-champagne-300 dark:border-champagne-700
            bg-champagne-50 dark:bg-champagne-500/10
-           p-5 text-sm leading-relaxed
+           p-6 text-sm leading-relaxed
            text-navy-700 dark:text-sand-300;
   }
 
@@ -454,6 +541,30 @@
   .link-underline:hover::after {
     @apply origin-left scale-x-100;
   }
+
+  /* ── Icon on an organic blob ────────────────────────────────────
+     The signature "service icon" treatment: a soft coloured blob with
+     the glyph centred on it. Pair with .blob-champagne / -clay / -sage. */
+  .icon-blob {
+    @apply relative flex items-center justify-center w-14 h-14 shrink-0
+           transition-transform duration-400 ease-expo-out;
+    border-radius: 58% 42% 47% 53% / 47% 52% 48% 53%;
+  }
+  .group:hover .icon-blob {
+    transform: rotate(-6deg) scale(1.06);
+  }
+  .blob-champagne {
+    @apply bg-champagne-200 text-champagne-800 dark:bg-champagne-500/25 dark:text-champagne-200;
+  }
+  .blob-clay {
+    @apply bg-clay-200 text-clay-700 dark:bg-clay-500/25 dark:text-clay-200;
+  }
+  .blob-sage {
+    @apply bg-sage-200 text-sage-700 dark:bg-sage-500/25 dark:text-sage-200;
+  }
+  .blob-navy {
+    @apply bg-navy-100 text-navy-700 dark:bg-navy-500/30 dark:text-navy-100;
+  }
 }
 
 /* ── Utilities ──────────────────────────────────────────────────── */
@@ -463,9 +574,7 @@
      bg-*, border-* and ring-* — but at 3.1:1 on paper it is too light
      for 12–14px copy (prices, captions, inline links). Text usages are
      stepped down to a deeper brass (5.3:1 on paper) here, in one place,
-     rather than editing every call site. Dark mode steps the other way.
-     Hover/group-hover variants keep the brighter 500 by specificity,
-     which is what you want for an accent that lights up on interaction. */
+     rather than editing every call site. Dark mode steps the other way. */
   .text-champagne-500,
   .text-gold-500 {
     color: #8a6432;
@@ -498,6 +607,56 @@
       linear-gradient(rgba(185, 139, 78, 0.07) 1px, transparent 1px),
       linear-gradient(90deg, rgba(185, 139, 78, 0.07) 1px, transparent 1px);
     background-size: 64px 64px;
+  }
+
+  /* Sparse dot field — the scattered confetti motif in the references */
+  .bg-dots {
+    background-image: radial-gradient(
+      circle,
+      rgba(201, 106, 71, 0.32) 1.4px,
+      transparent 1.4px
+    );
+    background-size: 18px 18px;
+  }
+
+  /* Arched photograph — flat base, domed top */
+  .arch-frame {
+    border-radius: 9999px 9999px 2rem 2rem;
+  }
+  .arch-frame-lg {
+    border-radius: 9999px 9999px 2.5rem 2.5rem;
+  }
+
+  /* Organic photo silhouettes — used for portraits and story imagery */
+  .organic-frame {
+    border-radius: 58% 42% 47% 53% / 47% 52% 48% 53%;
+  }
+  .organic-frame-2 {
+    border-radius: 42% 58% 62% 38% / 55% 42% 58% 45%;
+  }
+  /* A squircle that reads hand-drawn without losing usable corners —
+     safe for cards holding text or a 16:9 image. */
+  .soft-frame {
+    border-radius: 42% 42% 42% 42% / 30% 30% 30% 30%;
+  }
+
+  /* Section-edge curves. Applied to a section so the band itself has a
+     domed top or bottom, no SVG needed. */
+  .curve-top {
+    border-top-left-radius: 50% 3.5rem;
+    border-top-right-radius: 50% 3.5rem;
+  }
+  .curve-bottom {
+    border-bottom-left-radius: 50% 3.5rem;
+    border-bottom-right-radius: 50% 3.5rem;
+  }
+  .curve-top-lg {
+    border-top-left-radius: 50% 6rem;
+    border-top-right-radius: 50% 6rem;
+  }
+  .curve-bottom-lg {
+    border-bottom-left-radius: 50% 6rem;
+    border-bottom-right-radius: 50% 6rem;
   }
 
   .no-scrollbar {

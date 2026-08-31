@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, MapPin, IndianRupee } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import type { Project } from "@/types";
+import { Sparkle, Sprig } from "@/components/ui/Decor";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLES: Record<Project["status"], string> = {
@@ -10,60 +11,57 @@ const STATUS_STYLES: Record<Project["status"], string> = {
   Completed: "badge-green",
 };
 
+/* Cards on the deep band are light "paper" tiles with an arched photo —
+   the arch is the shape that carries through every image on the site. */
 function ProjectCard({ project }: { project: Project }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="card group block overflow-hidden"
+      className="group block rounded-[28px] bg-white/[0.06] p-3 backdrop-blur-sm transition-all duration-400 ease-expo-out hover:-translate-y-2 hover:bg-white/[0.1]"
     >
-      {/* Image */}
-      <div className="relative h-64 overflow-hidden bg-ivory-200 dark:bg-charcoal-700">
+      {/* Arched image */}
+      <div className="arch-frame relative h-64 overflow-hidden bg-navy-700 sm:h-72">
         <Image
           src={project.elevationImageUrl || "/images/placeholder.jpg"}
           alt={project.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-cover transition-transform duration-[900ms] ease-expo-out group-hover:scale-[1.07]"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-900/75 via-navy-900/10 to-transparent" />
+
         <span
-          className={`absolute top-3 left-3 ${STATUS_STYLES[project.status]}`}
+          className={cn(
+            "absolute left-4 top-4 backdrop-blur-sm",
+            STATUS_STYLES[project.status],
+          )}
         >
           {project.status}
         </span>
-        <span className="absolute top-3 right-3 badge bg-charcoal-900/70 text-ivory-100 backdrop-blur-sm">
-          {project.category}
-        </span>
+
+        {/* Price sits on the image, where the eye already is */}
+        <div className="absolute inset-x-4 bottom-4">
+          <p className="font-mono text-2xs uppercase tracking-label text-champagne-300">
+            From
+          </p>
+          <p className="font-display text-lg font-semibold text-white">
+            {project.priceRange}
+          </p>
+        </div>
       </div>
 
-      {/* Body */}
-      <div className="p-5">
-        <h3 className="font-display text-xl font-semibold text-charcoal-800 dark:text-ivory-100 mb-1 group-hover:text-gold-500 dark:group-hover:text-gold-400 transition-colors">
+      {/* Caption */}
+      <div className="px-3 pb-2 pt-5 text-center">
+        <h3 className="font-display text-lg font-semibold text-white transition-colors group-hover:text-champagne-300">
           {project.name}
         </h3>
-        <p className="font-body text-sm text-charcoal-500 dark:text-charcoal-300 mb-3 line-clamp-1">
+        <p className="mt-1.5 flex items-center justify-center gap-1.5 font-mono text-2xs uppercase tracking-label text-sand-400">
+          <MapPin className="h-3 w-3 text-champagne-400" />
+          <span className="truncate">{project.location}</span>
+        </p>
+        <p className="mt-3 line-clamp-2 font-body text-sm text-sand-300/80">
           {project.tagline}
         </p>
-
-        <div className="flex items-center gap-1.5 text-sm text-charcoal-500 dark:text-charcoal-400 mb-4">
-          <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-gold-400" />
-          <span className="truncate">{project.location}</span>
-        </div>
-
-        <div className="flex items-center justify-between pt-4 border-t border-ivory-200 dark:border-charcoal-600">
-          <div>
-            <p className="font-mono text-2xs tracking-wider uppercase text-charcoal-400 mb-0.5">
-              Starting From
-            </p>
-            <p className="text-ls font-semibold text-gold-500">
-              {project.priceRange}
-            </p>
-          </div>
-          <span className="flex items-center gap-1.5 text-xs font-medium text-gold-500 group-hover:gap-2.5 transition-all">
-            View Details
-            <ArrowRight className="w-3.5 h-3.5" />
-          </span>
-        </div>
       </div>
     </Link>
   );
@@ -71,41 +69,51 @@ function ProjectCard({ project }: { project: Project }) {
 
 export function FeaturedProjects({ projects }: { projects: Project[] }) {
   return (
-    <section className="section-py bg-ivory-100 dark:bg-charcoal-900">
-      <div className="container-max">
+    <section className="curve-top-lg curve-bottom-lg relative -mt-4 overflow-hidden bg-navy-900 py-24 dark:bg-navy-800 md:py-32">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-noise opacity-60" />
+        <div className="absolute -left-32 top-1/3 h-96 w-96 rounded-blob bg-champagne-500/[0.07] blur-3xl" />
+        <div className="absolute -right-24 bottom-10 h-80 w-80 rounded-blob-2 bg-clay-500/[0.07] blur-3xl" />
+        <Sprig className="left-[4%] top-24 hidden h-32 w-24 -rotate-12 text-sage-400/25 lg:block" />
+        <Sprig className="right-[5%] bottom-24 hidden h-28 w-20 rotate-[200deg] text-champagne-400/25 lg:block" />
+      </div>
+
+      <div className="container-max relative z-10">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <span className="section-label">Our Portfolio</span>
-            <h2 className="heading-lg text-charcoal-800 dark:text-ivory-100">
-              Featured Projects
-            </h2>
-            <p className="font-body text-charcoal-500 dark:text-charcoal-300 mt-3 max-w-lg">
-              Each project is a testament to our commitment to quality living,
-              thoughtful design, and enduring value.
-            </p>
-          </div>
-          <Link
-            href="/projects"
-            className="btn-secondary flex-shrink-0 self-start md:self-auto"
-          >
-            All Projects
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 font-mono text-2xs font-medium uppercase tracking-label text-champagne-300">
+            <Sparkle className="h-2.5 w-2.5" />
+            Featured Homes
+          </span>
+          <h2 className="heading-lg mt-4 text-balance text-white">
+            Addresses people{" "}
+            <em className="script-accent text-champagne-300">grow into.</em>
+          </h2>
+          <p className="mx-auto mt-5 max-w-lg text-pretty font-body text-sand-300/85">
+            Each project is a promise kept — thoughtful design, honest
+            construction and a handover date we hold ourselves to.
+          </p>
         </div>
 
         {/* Grid */}
         {projects.length === 0 ? (
-          <div className="text-center py-20 text-charcoal-400">
-            Projects coming soon…
+          <div className="rounded-[28px] border border-dashed border-white/15 py-20 text-center font-body text-sand-400">
+            New launches are being finalised — check back shortly.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((p) => (
               <ProjectCard key={p.id} project={p} />
             ))}
           </div>
         )}
+
+        <div className="mt-14 flex justify-center">
+          <Link href="/projects" className="btn-primary group">
+            View All Projects
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
     </section>
   );

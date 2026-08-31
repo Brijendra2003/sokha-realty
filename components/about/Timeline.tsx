@@ -2,38 +2,45 @@
 
 import { Building2, Landmark, Briefcase, Leaf, Users } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Blob, Sprig } from "@/components/ui/Decor";
 import { cn } from "@/lib/utils";
 
 const TIMELINE = [
   {
     year: "1995",
     title: "The Foundation",
-    desc: "Sokha Realty founded with a single residential project in Andheri.",
+    desc: "Sokha Realty is founded with a single residential project in Andheri.",
     icon: Building2,
+    blob: "blob-champagne",
   },
   {
     year: "2003",
     title: "First Landmark",
-    desc: "Delivered our first high-rise — Sokha Towers, redefining Mumbai's western suburbs skyline.",
+    desc: "Sokha Towers tops out — our first high-rise, and a new line on the western suburbs skyline.",
     icon: Landmark,
+    blob: "blob-clay",
   },
   {
     year: "2011",
     title: "Commercial Expansion",
-    desc: "Entered commercial real estate with Sokha Business Park in BKC.",
+    desc: "We enter commercial real estate with Sokha Business Park in BKC.",
     icon: Briefcase,
+    blob: "blob-sage",
   },
   {
     year: "2018",
-    title: "Green Building Certification",
-    desc: "Became one of the first developers in the region with IGBC Gold-certified projects.",
+    title: "Green Certification",
+    desc: "Among the first developers in the region with IGBC Gold-certified projects.",
     icon: Leaf,
+    blob: "blob-sage",
   },
   {
     year: "2024",
     title: "5,000+ Families",
-    desc: "Crossed the milestone of housing over 5,000 families across 42+ projects.",
+    desc: "We cross the milestone of housing over 5,000 families across 42+ projects.",
     icon: Users,
+    blob: "blob-champagne",
   },
 ];
 
@@ -44,44 +51,46 @@ function TimelineItem({
   item: (typeof TIMELINE)[number];
   isEven: boolean;
 }) {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.4 });
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.35 });
 
   return (
     <div ref={ref} className="relative flex items-center">
-      {/* Gold dot */}
+      {/* Year medallion, centred on the rail */}
       <div
         className={cn(
-          "absolute left-5 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gold-500 ring-4 ring-ivory-100 dark:ring-charcoal-900 z-10 transition-transform duration-500",
-          inView ? "scale-100 animate-gold-pulse" : "scale-0"
-        )}
-      />
-
-      {/* Card — mobile: always right of dot | desktop: alternates */}
-      <div
-        className={cn(
-          "w-full pl-14 md:pl-0 md:w-1/2 transition-all duration-700",
-          isEven ? "md:pr-12 md:text-right md:ml-0" : "md:pl-14 md:ml-auto",
-          inView
-            ? "opacity-100 translate-y-0"
-            : cn("opacity-0 translate-y-6")
+          "absolute left-6 z-10 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-blob",
+          "bg-white font-mono text-2xs font-semibold text-champagne-700 shadow-soft",
+          "ring-4 ring-sand-100 transition-all duration-600 ease-expo-out",
+          "dark:bg-navy-700 dark:text-champagne-300 dark:ring-navy-900",
+          "md:left-1/2",
+          inView ? "scale-100 opacity-100" : "scale-50 opacity-0",
         )}
       >
-        <div className="card p-5 md:p-6 group hover:-translate-y-1">
+        {item.year}
+      </div>
+
+      {/* Card — mobile sits right of the rail, desktop alternates */}
+      <div
+        className={cn(
+          "w-full pl-20 transition-all duration-700 ease-expo-out md:w-1/2 md:pl-0",
+          isEven ? "md:ml-0 md:pr-16 md:text-right" : "md:ml-auto md:pl-16",
+          inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+        )}
+      >
+        <div className="card-lift group p-7">
           <div
             className={cn(
-              "w-10 h-10 rounded-sm bg-gold-100 dark:bg-gold-900/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300",
-              isEven ? "md:ml-auto" : ""
+              "icon-blob mb-4 h-12 w-12",
+              item.blob,
+              isEven && "md:ml-auto",
             )}
           >
-            <item.icon className="w-5 h-5 text-gold-500" />
+            <item.icon className="h-5 w-5" />
           </div>
-          <p className="font-mono text-xs font-bold text-gold-500 mb-1 tracking-wide">
-            {item.year}
-          </p>
-          <h3 className="font-display text-lg font-semibold text-charcoal-800 dark:text-ivory-100 mb-1">
+          <h3 className="mb-2 font-display text-lg font-semibold text-navy-800 dark:text-sand-100">
             {item.title}
           </h3>
-          <p className="font-body text-sm text-charcoal-500 dark:text-charcoal-300">
+          <p className="font-body text-sm leading-relaxed text-navy-500 dark:text-sand-400">
             {item.desc}
           </p>
         </div>
@@ -92,20 +101,26 @@ function TimelineItem({
 
 export function Timeline() {
   return (
-    <section className="section-py bg-ivory-100 dark:bg-charcoal-900">
-      <div className="container-max">
-        <div className="text-center mb-16">
-          <span className="section-label">Our Journey</span>
-          <h2 className="heading-lg text-charcoal-800 dark:text-ivory-100">
-            Milestones Along the Way
-          </h2>
-        </div>
+    <section className="curve-top-lg curve-bottom-lg relative overflow-hidden bg-sand-200 py-24 dark:bg-navy-900 md:py-32">
+      <div className="pointer-events-none absolute inset-0">
+        <Blob tone="clay" className="-left-24 top-24 h-80 w-80" />
+        <Sprig className="right-[5%] top-32 hidden h-32 w-24 -rotate-12 text-sage-500/40 lg:block" />
+      </div>
 
-        <div className="relative max-w-3xl mx-auto">
-          {/* Vertical gradient line */}
-          <div className="absolute left-5 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gold-500/40 to-transparent" />
+      <div className="container-max relative z-10">
+        <SectionHeading
+          eyebrow="Our Journey"
+          title="Milestones along"
+          accent="the way."
+          lead="Thirty years, five turning points, and a lot of concrete in between."
+          className="mb-16"
+        />
 
-          <div className="space-y-12">
+        <div className="relative mx-auto max-w-3xl">
+          {/* Vertical rail */}
+          <div className="absolute bottom-0 left-6 top-0 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-champagne-500/45 to-transparent md:left-1/2" />
+
+          <div className="space-y-14">
             {TIMELINE.map((item, i) => (
               <TimelineItem key={item.year} item={item} isEven={i % 2 === 0} />
             ))}

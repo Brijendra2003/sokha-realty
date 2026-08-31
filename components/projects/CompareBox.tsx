@@ -59,16 +59,16 @@ export function CompareBox({ selected, projects, clear, onRemove }: CompareBoxPr
     <div className="fixed bottom-0 left-0 right-0 z-50">
       {/* Expanded comparison table */}
       {expanded && (
-        <div className="border-t border-ivory-300 dark:border-charcoal-600 bg-white dark:bg-charcoal-800 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] max-h-[70vh] overflow-y-auto">
-          <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-charcoal-800 dark:text-ivory-100">
+        <div className="max-h-[70vh] overflow-y-auto rounded-t-[32px] border-t border-sand-300 bg-white shadow-[0_-8px_30px_rgba(69,45,22,0.1)] dark:border-navy-600 dark:bg-navy-700">
+          <div className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
+            <div className="mb-5 flex items-center justify-between">
+              <h3 className="font-display text-lg font-semibold text-navy-800 dark:text-sand-100">
                 Comparing {compareProjects.length} project
                 {compareProjects.length > 1 ? "s" : ""}
               </h3>
               <button
                 onClick={() => setExpanded(false)}
-                className="flex items-center gap-1 text-sm text-charcoal-500 dark:text-charcoal-300 hover:text-gold-500 transition-colors"
+                className="flex items-center gap-1.5 rounded-full px-4 py-2 font-body text-sm text-navy-500 transition-colors hover:bg-sand-100 hover:text-champagne-700 dark:text-sand-300 dark:hover:bg-navy-800"
               >
                 Collapse
                 <ChevronDown size={16} />
@@ -82,7 +82,7 @@ export function CompareBox({ selected, projects, clear, onRemove }: CompareBoxPr
                     <th className="w-32 sm:w-40" />
                     {compareProjects.map((p) => (
                       <th key={p.id} className="min-w-[180px] px-3 pb-4 text-left align-top">
-                        <div className="relative overflow-hidden rounded-lg bg-ivory-200 dark:bg-charcoal-700 aspect-[4/3] mb-2">
+                        <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-[20px] bg-sand-200 dark:bg-navy-800">
                           {p.elevationImageUrl && (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
@@ -142,7 +142,7 @@ export function CompareBox({ selected, projects, clear, onRemove }: CompareBoxPr
       )}
 
       {/* Collapsed floating tray */}
-      <div className="border-t border-ivory-300 dark:border-charcoal-600 bg-white dark:bg-charcoal-800 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+      <div className="border-t border-sand-300 bg-white shadow-[0_-4px_20px_rgba(69,45,22,0.08)] dark:border-navy-600 dark:bg-navy-700">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3 overflow-x-auto">
             <div className="flex items-center gap-1.5 text-sm font-medium text-charcoal-700 dark:text-ivory-200 shrink-0">
@@ -178,7 +178,7 @@ export function CompareBox({ selected, projects, clear, onRemove }: CompareBoxPr
             <button
               onClick={() => setExpanded((e) => !e)}
               disabled={compareProjects.length < 2}
-              className="flex items-center gap-1.5 rounded-full bg-gold-500 px-4 py-2 text-sm font-medium text-charcoal-900 transition-colors hover:bg-gold-400 disabled:cursor-not-allowed disabled:bg-ivory-300 disabled:text-charcoal-400"
+              className="flex items-center gap-1.5 rounded-full bg-gold-gradient px-5 py-2.5 font-body text-sm font-semibold text-navy-900 shadow-gold-sm transition-all duration-300 hover:shadow-gold disabled:cursor-not-allowed disabled:bg-sand-300 disabled:bg-none disabled:text-navy-400 disabled:shadow-none"
             >
               {expanded ? "Hide" : "Compare"}
               {expanded ? <ChevronDown size={15} /> : <ChevronUp size={15} />}

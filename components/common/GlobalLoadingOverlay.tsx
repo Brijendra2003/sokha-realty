@@ -46,16 +46,18 @@ export function GlobalLoadingOverlay() {
       tabIndex={-1}
     >
       <div className="flex flex-col items-center gap-5">
-        <div className="w-14 h-14 rounded-sm bg-gold-gradient flex items-center justify-center animate-pulse">
-          <span className="font-display text-charcoal-900 font-bold text-2xl">
+        {/* The wordmark blob, slowly reshaping — same motif as the
+            route-level loader and the footer logo. */}
+        <div className="flex h-16 w-16 animate-blob-morph items-center justify-center bg-gold-gradient shadow-gold">
+          <span className="font-display text-2xl font-bold text-navy-900">
             S
           </span>
         </div>
         <div
-          className="w-8 h-8 rounded-full border-2 border-charcoal-200 border-t-gold-500 animate-spin"
+          className="h-8 w-8 animate-spin rounded-full border-2 border-sand-300 border-t-champagne-500"
           aria-hidden="true"
         />
-        <p className="font-mono text-xs tracking-[0.2em] uppercase text-charcoal-500">
+        <p className="font-mono text-2xs uppercase tracking-label text-navy-500">
           Loading
         </p>
       </div>
